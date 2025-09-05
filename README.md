@@ -213,9 +213,9 @@ In this step, TheHive was fully configured by modifying its dependencies (Cassan
 Below are the detailed commands and configuration changes used during the setup.
  
 🛠️ 4.1 Cassandra Configuration
+
     sudo su
     nano /etc/cassandra/cassandra.yml
-
 🔧 Changes made:
 -> cluster_name: Changed to SOC Project
 -> listen_address: Kept as localhost
@@ -223,11 +223,11 @@ Below are the detailed commands and configuration changes used during the setup.
 -> seed_provider: Ensured value is localhost
 
 Then restart Cassandra to apply changes:
+
     systemctl stop cassandra.service
     rm -rf /var/lib/cassandra/*
     systemctl start cassandra.service
     systemctl status cassandra.service
-
 ✅ Expected Result: Cassandra service should be in active (running) state.
 
 🖼️ Image Suggestion:
@@ -236,8 +236,8 @@ Then restart Cassandra to apply changes:
 
 📡 4.2 Elasticsearch Configuration
 Edit the Elasticsearch configuration:
-    nano /etc/elasticsearch/elasticsearch.yml
 
+    nano /etc/elasticsearch/elasticsearch.yml
 🔧 Changes made:
 -> cluster.name: Changed to SOC Project
 -> network.host: Uncommented and set to localhost
@@ -245,10 +245,10 @@ Edit the Elasticsearch configuration:
 -> cluster.initial_master_nodes: Removed node2, kept only node1
 
 Start and enable Elasticsearch:
+
     systemctl start elasticsearch
     systemctl enable elasticsearch
     systemctl status elasticsearch
-
 ✅ Expected Result: Elasticsearch should be active (running).
 
 🖼️ Image Suggestion:
@@ -257,12 +257,12 @@ Start and enable Elasticsearch:
 
 📂 4.3 TheHive Directory Permissions
 Check directory ownership:
-    ls -la /opt/thp
 
+    ls -la /opt/thp
 If access is restricted to root, grant permissions to TheHive user:
     chown -R thehive:thehive /opt/thp
+    
     ls -la /opt/thp
-
 ✅ Expected Result: Ownership should now belong to thehive:thehive.
 
 🖼️ Image Suggestion:
@@ -271,28 +271,30 @@ If access is restricted to root, grant permissions to TheHive user:
 
 ⚙️ 4.4 TheHive Application Configuration
 Open TheHive configuration file:
-    nano /etc/thehive/application.conf
 
+    nano /etc/thehive/application.conf
 🔧 Changes made:
 -> Ensured hostname is set to localhost
 
 Then start, enable, and check TheHive:
+
     systemctl start thehive
     systemctl enable thehive
     systemctl status thehive
-
 ✅ Expected Result: TheHive should now be active (running).
 
 Also re-check Cassandra & Elasticsearch status to ensure everything is running:
+
     systemctl status cassandra.service
     systemctl status elasticsearch.service
 
 
 🌐 4.5 Access TheHive UI
 Open a browser and navigate to:
-    http://localhost:9000
 
+    http://localhost:9000
 Login with default credentials:
+
     Username: admin@admin.local
     Password: secret
 
@@ -302,12 +304,11 @@ Login with default credentials:
 
 🧠 4.6 JVM Options Update
 Edit JVM options to adjust memory allocation:
+
     nano /etc/elasticsearch/jvm.options.d/jvm.options
     -Dlog4j2.formatMsgNoLookups=true
     -Xms2g
     -Xmx2g
-
-
 ✅ At this stage, TheHive, Cassandra, and Elasticsearch should all be running and accessible, completing the configuration process.
 
 
