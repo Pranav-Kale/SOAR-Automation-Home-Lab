@@ -217,7 +217,7 @@ This guide/video includes:
 In this step, TheHive was fully configured by modifying its dependencies (Cassandra, Elasticsearch) and its own configuration file.  
 Below are the detailed commands and configuration changes used during the setup.  
  
-🛠️ 4.1 Cassandra Configuration  
+### 🛠️ 4.1 Cassandra Configuration  
 
     sudo su
     nano /etc/cassandra/cassandra.yml
@@ -239,7 +239,7 @@ Then restart Cassandra to apply changes:
 🖼️ [Screenshot of Cassandra config file (showing cluster_name) + terminal showing Cassandra service running]
 
 
-📡 4.2 Elasticsearch Configuration  
+### 📡 4.2 Elasticsearch Configuration  
 Edit the Elasticsearch configuration:  
 
     nano /etc/elasticsearch/elasticsearch.yml
@@ -260,7 +260,7 @@ Start and enable Elasticsearch:
 🖼️ [Screenshot of elasticsearch.yml + terminal showing Elasticsearch running]
 
 
-📂 4.3 TheHive Directory Permissions  
+### 📂 4.3 TheHive Directory Permissions  
 Check directory ownership:  
 
     ls -la /opt/thp
@@ -274,7 +274,7 @@ If access is restricted to root, grant permissions to TheHive user:
 🖼️ [Screenshot of directory permissions before and after chown]
 
 
-⚙️ 4.4 TheHive Application Configuration  
+### ⚙️ 4.4 TheHive Application Configuration  
 Open TheHive configuration file:  
 
     nano /etc/thehive/application.conf
@@ -294,7 +294,7 @@ Also re-check Cassandra & Elasticsearch status to ensure everything is running:
     systemctl status elasticsearch.service
 
 
-🌐 4.5 Access TheHive UI  
+### 🌐 4.5 Access TheHive UI  
 Open a browser and navigate to:  
 
     http://localhost:9000
@@ -307,7 +307,7 @@ Login with default credentials:
 🖼️ [Screenshot of TheHive login page after first successful run]
 
 
-🧠 4.6 JVM Options Update  
+### 🧠 4.6 JVM Options Update  
 Edit JVM options to adjust memory allocation:  
 
     nano /etc/elasticsearch/jvm.options.d/jvm.options
@@ -323,7 +323,7 @@ Edit JVM options to adjust memory allocation:
 ## 🖥️ Step 5: Wazuh Configuration  
 In this step, Wazuh was configured and the Windows 10 workstation was added as an agent so that its telemetry could be collected and analyzed.  
 
-🌐 5.1 Access Wazuh Dashboard  
+### 🌐 5.1 Access Wazuh Dashboard  
 1.Open a browser and navigate to the Wazuh Dashboard using the Ubuntu server IP address:  
 
     https://10.53.159.19
@@ -334,7 +334,7 @@ In this step, Wazuh was configured and the Windows 10 workstation was added as a
 🖼️ [Screenshot of Wazuh Dashboard showing 0 agents connected]
 
 
-# 📂 5.2 Retrieve Wazuh Installation Details  
+### 📂 5.2 Retrieve Wazuh Installation Details  
 On the Wazuh Ubuntu Server:  
 
     sudo su
@@ -355,7 +355,7 @@ This password is used to log into the dashboard and manage agents.
 🖼️ [Screenshot of terminal showing extraction + cat command output]
 
 
-➕ 5.3 Add a New Agent in Wazuh  
+### ➕ 5.3 Add a New Agent in Wazuh  
 1.Go to Wazuh Dashboard → Add Agent  
 2.Select Windows as the operating system  
 3.Enter:  
@@ -372,7 +372,7 @@ This password is used to log into the dashboard and manage agents.
 🖼️ [Screenshot of Deploy New Agent page in Wazuh Dashboard with fields filled]
 
 
-💻 5.4 Install Wazuh Agent on Windows Workstation  
+### 💻 5.4 Install Wazuh Agent on Windows Workstation  
 On the Windows 10 VM:  
 1.Open PowerShell as Administrator  
 2.Paste the installation command you copied earlier (or dummy one above).  
@@ -388,7 +388,7 @@ On the Windows 10 VM:
 🖼️ [Screenshot of PowerShell installation output + Services window showing Wazuh Agent running]
 
 
-📊 5.5 Verify Connection on Wazuh Dashboard  
+### 📊 5.5 Verify Connection on Wazuh Dashboard  
 Go back to the Wazuh dashboard and refresh the page.  
 You should now see:  
 -> Total Agents = 1  
