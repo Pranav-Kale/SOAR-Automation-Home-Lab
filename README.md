@@ -492,6 +492,7 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
 <p align="center">
 <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/WindowsSecurity.png?raw=true" height="250" />
 <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Mimikatz_download.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Mimikatz.png?raw=true" height="250" />
 </p>
 
 ### 7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
@@ -506,6 +507,11 @@ Change inside <global>:
 
     <logall>yes</logall>
     <logall_json>yes</logall_json>
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/webhook_integration_with_shuffle.png?raw=true" height="250" />
+</p>
+    
 💾 Save → restart Wazuh:  
 
     systemctl restart wazuh-manager.service
@@ -523,6 +529,11 @@ to:
 
     archives:
       enabled: true
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/filebeat.png?raw=true" height="250" />
+</p>
+  
 Restart Filebeat:  
 
     systemctl restart filebeat
@@ -533,6 +544,11 @@ Restart Filebeat:
 -> ➕ Create new pattern: wazuh-archives-*  
 -> Select @timestamp as time field.  
 -> ✅ Save and switch to this pattern.  
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/stack_management.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/index_pattern.png?raw=true" height="250" />
+</p>
 
 ### 🔟 Viewing Mimikatz Logs 👀  
 Run Mimikatz again on Windows 10.  
@@ -549,8 +565,9 @@ Inside the logs, look for:
     "data.win.eventdata.originalFileName": "mimikatz.exe"
 💡 Tip: This field is more reliable than image because attackers may rename the executable.  
 
-📷 [Placeholder for Event Viewer Screenshot]
-📷 [Placeholder for Wazuh Dashboard Screenshot with Mimikatz Logs]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/original_final_name.png?raw=true" height="250" />
+</p>
 
 ---  
 
@@ -562,6 +579,7 @@ In this step, we create a custom rule in Wazuh to detect Mimikatz execution base
 -> Click the dropdown button (⏬) next to “Wazuh” → Sidebar Opens.  
 -> Navigate to: Management → Rules.  
 
+
 ### 2️⃣ Finding the Target Rule 🔍  
 -> Click Manage Rules Files.  
 -> Search for Sysmon Rules → locate:  
@@ -572,9 +590,23 @@ In this step, we create a custom rule in Wazuh to detect Mimikatz execution base
    ✅ This means every time a new process/executable starts, Sysmon generates an Event ID 1 log.  
     This makes it ideal for catching tools like Mimikatz as soon as they run.  
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/sysmon_rules.png?raw=true" height="250" />
+</p>
+
+
+
 ### 3️⃣ Creating Custom Rule File ✏️  
 -> Open the rule file → Copy the <rule> block from sysmon_no_id_1.xml.  
 -> Go back → Click Custom Rules → Edit local_rules.xml file.  
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/0800-sysmon_id.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/custom_rules.png?raw=true" height="250" />
+</p>
+
+
+
 
 ### 4️⃣Paste and Modifying the Rule 🛠️
 Inside local_rules.xml paste the copied rule below the existing rule:
@@ -595,6 +627,10 @@ Inside local_rules.xml paste the copied rule below the existing rule:
 
     <mitre> <id>T1003</id> </mitre>
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/local_rules.xml.png?raw=true" height="250" />
+</p>
+
 ### 5️⃣ Saving and Restarting Wazuh 🔄  
 -> Save changes.  
 -> Click Restart on the Wazuh Dashboard to apply the rule.  
@@ -609,7 +645,9 @@ Inside local_rules.xml paste the copied rule below the existing rule:
     Wazuh Dashboard shows a new alert:
     “Mimikatz usage detected” 🔥
 
-📷 [🖼️ Screenshot Placeholder: Wazuh Dashboard showing Custom Rule Alert]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/mimikatz_usage_detected_in_dashboard.png?raw=true" height="250" />
+</p>
 
 ---  
 
@@ -622,12 +660,22 @@ In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and conf
 -> Log in to Shuffle ➝ Navigate to Admin tab ➝ Select Locations.  
 -> Click Add Location ➝ Name: local-env ➝ Type: on-prem ➝ Save.  
 -> Click Make Default ✅.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_admin.png?raw=true" height="250" />
+</p>
 -> Go back to Workflows ➝ Create a new workflow:  
 
     Name: SOC Automation Project
-    Description: MySocLab
+    Description: My SOC Project
     Select any use case ➝ Done.
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_create_workflow.png?raw=true" height="250" />
+</p>
 -> A new canvas opens with the ChangeMe icon.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_changeme.png?raw=true" height="250" />
+</p>
+
 
 ### 8.2 – Webhook Setup 🔗  
 -> Click on Triggers ➝ Drag and drop Webhook onto the canvas.  
@@ -637,6 +685,9 @@ In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and conf
     Name: Wazuh.alerts
     Copy the Webhook URI.
 -> Save ✅.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_webhook_added.png?raw=true" height="250" />
+</p>
 
 ### 8.3 – Connect Wazuh to Shuffle 🛜  
 On Ubuntu server:  
@@ -650,6 +701,11 @@ On Ubuntu server:
       <rule_id>100002</rule_id>
       <alert_format>json</alert_format>
     </integration>
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/webhook_integration_with_shuffle.png?raw=true" height="250" />
+</p>
+
 -> Save & restart:  
 
     sudo systemctl restart wazuh-manager.service
@@ -671,6 +727,9 @@ Regex:
     sha256=([0-9a-fA-F]{64})
 -> Rename action to sha256_regex.  
 -> Save & rerun workflow ➝ Confirm parsed hashes in execution output ✅.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_virustotal_config.png?raw=true" height="250" />
+</p>
 
 
 ### 8.6 – VirusTotal Integration 🧪  
@@ -683,6 +742,11 @@ Regex:
     -> API URL: https://www.virustotal.com
     Hash Parameter: Select runtime argument ➝ groups ➝ list.
 -> Save & rerun ➝ Verify VirusTotal status = Success.  
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_authenticate_virustotal.png?raw=true" height="250" />
+</p>
+
 -> Inspect output ➝ Confirm field last_analysis_stats.malicious returns a value like 67.  
 
 
@@ -695,6 +759,9 @@ We created two users (one analyst, one service account) to follow principle of l
 
 Steps:  
 -> Log into Hive ➝ Create new Organization (SOCProject).  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_organization.png?raw=true" height="250" />
+</p>
 
     Add:
     User 1:
@@ -708,10 +775,20 @@ Steps:
     Role: Analyst
     Generate API key ➝ Copy & store securely.
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_soc_project_organization.png?raw=true" height="250" />
+</p>
+
 -> Logout ➝ Test login with Analyst user to confirm.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_login_with_user.png?raw=true" height="250" />
+</p>
 
 In Shuffle:  
 -> Authenticate Hive ➝ Paste API key + Hive IP ➝ Submit.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_login_with_user.png?raw=true" height="250" />
+</p>
 -> Find Actions: Create Alert.  
 -> Configure parameters:  
 
@@ -727,9 +804,16 @@ In Shuffle:
     TLP: 2
     Type: internal
 -> Save & rerun ➝ Confirm Hive alert is generated ✅.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_alert.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_alert_details.png?raw=true" height="250" />
+</p>
 
 ### 8.8 – Email Notification Setup 📧  
 -> In Shuffle ➝ Apps ➝ Search for Email ➝ Drag & connect VirusTotal to the Email.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/shuffle/shuffle_email.png?raw=true" height="250" />
+</p>
 -> Configure:  
 
     Recipient: Analyst mail address
@@ -740,6 +824,9 @@ In Shuffle:
     Title : Runtime Argument(title)
     Severity : Runtime Argument(severity)
 -> Save & rerun ➝ Check your inbox ➝ Confirm alert email received ✅.  
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/analyst_received_email.png?raw=true" height="250" />
+</p>
 
 ---  
 
