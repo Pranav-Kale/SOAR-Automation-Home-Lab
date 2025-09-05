@@ -30,7 +30,6 @@ In today’s world, cyber threats are everywhere – from phishing emails to cre
 This project demonstrates how automation can make SOC operations faster and more efficient.
 
 We’ve built a mini SOC homelab with:
-
   -> Windows 10 VM as the endpoint where we generate telemetry.
   
   -> Wazuh Manager to detect suspicious activity.
@@ -38,6 +37,9 @@ We’ve built a mini SOC homelab with:
   -> Shuffle for automation and enrichment using VirusTotal API.
   
   -> TheHive for case management and investigation.
+
+
+
 
 Key Features:
 🔍 Detect suspicious activity (Mimikatz execution)
