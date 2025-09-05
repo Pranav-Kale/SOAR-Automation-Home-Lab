@@ -9,7 +9,7 @@
 6. [Prerequisites](#-prerequisites)  
 7. [Network Topology](#-network-topology)  
 8. [Step 1: Environment Setup](#️-step-1-environment-setup)  
-9. [Step 2: Network Configuration](#step-2-network-configuration)  
+9. [Step 2: Network Configuration](#-step-2-network-configuration)  
 10. [Step 3: Installation (Linked Resources)](#step-3-installation-linked-resources)  
 11. [Step 4: TheHive Configuration](#step-4-thehive-configuration)  
 12. [Step 5: Wazuh Configuration](#step-5-wazuh-configuration)  
