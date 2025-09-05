@@ -10,9 +10,9 @@
 7. [Network Topology](#-network-topology)  
 8. [Step 1: Environment Setup](#️-step-1-environment-setup)  
 9. [Step 2: Network Configuration](#-step-2-network-configuration)  
-10. [Step 3: Installation (Linked Resources)](#step-3-installation-linked-resources)  
-11. [Step 4: TheHive Configuration](#step-4-thehive-configuration)  
-12. [Step 5: Wazuh Configuration](#step-5-wazuh-configuration)  
+10. [Step 3: Installation (Linked Resources)](#-step-3-installation)  
+11. [Step 4: TheHive Configuration](#-step-4-thehive-configuration)  
+12. [Step 5: Wazuh Configuration](#-step-5-wazuh-configuration)  
 13. [Step 6: Windows 10 Telemetry Configuration](#step-6-windows-10-telemetry-configuration)  
 14. [Step 7: Rule Creation in Wazuh](#step-7-rule-creation-in-wazuh)  
 15. [Step 8: Shuffle Integration & Workflow Automation](#step-8-shuffle-integration--workflow-automation)  
@@ -404,7 +404,7 @@ You should now see:
 
 ---  
 
-## Step 6: Windows 10 Telemetry Configuration 🖥️🔍
+## 🔍 Step 6: Windows 10 Telemetry Configuration  
 In this step, we configure Windows 10 telemetry to send Sysmon and event logs to the Wazuh Manager for analysis.  
 
 1️⃣ Editing ossec.conf File 📄  
@@ -521,7 +521,7 @@ Inside the logs, look for:
 
 ---  
 
-## Step 7: Rule Creation in Wazuh 🛡️📜  
+## 📜 Step 7: Rule Creation in Wazuh  
 In this step, we create a custom rule in Wazuh to detect Mimikatz execution based on Sysmon logs.  
 
 1️⃣ Navigating to Rules Section 🧭  
@@ -581,7 +581,7 @@ Inside local_rules.xml paste the copied rule below the existing rule:
 
 
 
-## Step 8: Shuffle Integration & Workflow Automation 🔄  
+## 🔄 Step 8: Shuffle Integration & Workflow Automation   
 In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and configure automated workflows that send email alerts to SOC analysts when malicious activity (Mimikatz usage) is detected.  
 
 8.1 – Shuffle Setup 🖥️  
