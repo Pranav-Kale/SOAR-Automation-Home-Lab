@@ -69,7 +69,10 @@ Ubuntu Server 1 (Wazuh Manager):
 
 All virtual machines were connected using a bridged network, ensuring seamless communication between laptops as if they were on the same physical network.  
 
-🖼️ [Insert Simple Network Topology Diagram – Laptop 1 + Laptop 2 + VMs + Bridge Network + Arrows Showing Communication]
+<p align="center">
+  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/Simple%20Network%20Topology%20Diagram.png?raw=true" alt="Network Topology" height="250" />
+</p>
+
 
 
 ---  
