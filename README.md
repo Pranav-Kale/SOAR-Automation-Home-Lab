@@ -333,6 +333,7 @@ In this step, Wazuh was configured and the Windows 10 workstation was added as a
 🖼️ Image Suggestion:
 🖼️ [Screenshot of Wazuh Dashboard showing 0 agents connected]
 
+--
 
 📂 5.2 Retrieve Wazuh Installation Details  
 On the Wazuh Ubuntu Server:  
