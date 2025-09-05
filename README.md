@@ -99,7 +99,7 @@ The workflow of SOC Automation Project shows how an attack is detected, enriched
 -> Shuffle sends an email notification to the SOC analyst with a summary of the incident.  
 
 <p align="center">
-  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/Flowchart.png?raw=true" alt="Flowchart" height="250" />
+  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/Flowchart.png?raw=true" alt="Flowchart" height="400" />
 </p>
 
 ---  
