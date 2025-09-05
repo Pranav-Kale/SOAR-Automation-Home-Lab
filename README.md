@@ -98,7 +98,9 @@ The workflow of SOC Automation Project shows how an attack is detected, enriched
 5.Notification 📧  
 -> Shuffle sends an email notification to the SOC analyst with a summary of the incident.  
 
-🖼️ [Insert Workflow Flowchart – From Attack Simulation to Email Notification]
+<p align="center">
+  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/Flowchart.png?raw=true" alt="Flowchart" height="250" />
+</p>
 
 ---  
 
