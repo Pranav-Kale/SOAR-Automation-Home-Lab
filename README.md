@@ -343,7 +343,7 @@ In this step, Wazuh was configured and the Windows 10 workstation was added as a
 
 <p align="center">
 <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh.png?raw=true" height="250" />
-<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh_agent_connected.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh_no_agent_connected.png?raw=true" height="250" />
 </p>
 
 
