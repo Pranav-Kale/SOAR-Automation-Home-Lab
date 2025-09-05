@@ -3,12 +3,12 @@
 ## Table of Contents  
 1. [Introduction](#introduction)  
 2. [Key Features](#key-features)  
-3. [Network Setup](#network-setup)  
-4. [Workflow Overview](#workflow-overview)  
-5. [Key Highlights](#key-highlights)  
-6. [Prerequisites](#prerequisites)  
-7. [Network Topology](#network-topology)  
-8. [Step 1: Environment Setup](#step-1-environment-setup)  
+3. [Network Setup](#-network-setup)  
+4. [Workflow Overview](#-workflow-overview)  
+5. [Key Highlights](#-key-highlights)  
+6. [Prerequisites](#-prerequisites)  
+7. [Network Topology](#-network-topology)  
+8. [Step 1: Environment Setup](#-step-1-environment-setup)  
 9. [Step 2: Network Configuration](#step-2-network-configuration)  
 10. [Step 3: Installation (Linked Resources)](#step-3-installation-linked-resources)  
 11. [Step 4: TheHive Configuration](#step-4-thehive-configuration)  
@@ -106,7 +106,7 @@ The workflow of SOC Automation Project shows how an attack is detected, enriched
 
 
 
-🌟 Key Highlights  
+## 🌟 Key Highlights  
 SOC Automation Project stands out because of the following features:  
 
 -> End-to-End SOC Workflow: Covers detection, enrichment, case creation, and analyst notification seamlessly.  
