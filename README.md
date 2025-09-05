@@ -120,7 +120,9 @@ SOC Automation Project stands out because of the following features:
 -> Immediate Notifications: Sends emails to SOC analysts for faster response.  
 -> Hands-On SOC Experience: Closely mimics a real SOC environment, making it perfect for learning and practice.  
 
-🖼️ [Insert Screenshot of Your Entire Lab Setup – Virtual Machines Running on Both Laptops]
+<p align="center">
+  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/Lab%20Setup.png?raw=true" alt="Network Topology" height="250" />
+</p>
 
 ---  
 
@@ -146,8 +148,6 @@ SOC Automation Project stands out because of the following features:
 | **Storage**               | Sufficient disk space to run 3 VMs and store log data                                          |
 
 
-🖼️ [Insert Screenshot of VM Settings (RAM, CPU, Network set to Bridged) for Each VM]
-
 
 ---  
 
@@ -159,7 +159,9 @@ The lab uses two laptops connected through a bridged network, allowing all syste
 -> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.  
 -> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates   telemetry, enriches alerts, and creates cases.  
 
-🖼️ [Insert Simple Network Diagram – Laptop 1 & Laptop 2 with their VMs, connected via Bridged Network, arrows showing data flow]
+<p align="center">
+  <img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/SOC%20home%20lab%20diagram%20%20(1).png?raw=true" alt="Network Topology" height="250" />
+</p>
 
 
 ---  
@@ -173,7 +175,11 @@ To start the project, I set up the virtual environment across two laptops:
 -> Distributed load across two laptops (Laptop 1 hosted Wazuh Manager, Laptop 2 hosted Windows 10, TheHive, and Shuffle).  
 -> Installed operating systems and set Bridged Network mode so all machines could communicate.  
 
-🖼️ [Screenshot of All VMs in VMware/VirtualBox With Resource Allocation and Network Mode Visible]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntuServer_thehive_network_configuration.png?raw=true" alt="Network Topology" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntuServer_wazuh_network_configuration.png?raw=true" alt="Network Topology" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10_workstation_network_configuration.png?raw=true" alt="Network Topology" height="250" />
+</p>
 
 ---  
 
@@ -186,7 +192,7 @@ After setting up the environment, I configured the network for all virtual machi
 
 All machines were set to Bridged Network Mode so they could communicate with each other and with the host systems seamlessly.  
 
-🖼️ [Screenshot of VM Network Settings & IP Configurations (ip addr/ipconfig output) for Each VM]
+
 
 
 ---  
@@ -207,11 +213,6 @@ This guide/video includes:
 -> Sysmon installation steps  
 -> Wazuh manager, dashboard installation  
 -> TheHive installation and service setup  
-
-🖼️ Image Suggestion:
-
-🖼️ [Single Collage Screenshot of Sysmon CMD Output + Wazuh Dashboard + TheHive Login Page]
-(This single collage image will visually represent that all three tools were successfully installed.)
 
 ---  
 
@@ -241,8 +242,9 @@ Then restart Cassandra to apply changes:
     systemctl status cassandra.service
 ✅ Expected Result: Cassandra service should be in active (running) state.  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of Cassandra config file (showing cluster_name) + terminal showing Cassandra service running]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/cassandra_status.png?raw=true" alt="Network Topology" height="250" />
+</p>
 
 
 ### 📡 4.2 Elasticsearch Configuration  
@@ -262,8 +264,9 @@ Start and enable Elasticsearch:
     systemctl status elasticsearch
 ✅ Expected Result: Elasticsearch should be active (running).  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of elasticsearch.yml + terminal showing Elasticsearch running]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/elasticsearch_status.png?raw=true" alt="Network Topology" height="250" />
+</p>
 
 
 ### 📂 4.3 TheHive Directory Permissions  
@@ -275,9 +278,6 @@ If access is restricted to root, grant permissions to TheHive user:
     
     ls -la /opt/thp
 ✅ Expected Result: Ownership should now belong to thehive:thehive.  
-
-🖼️ Image Suggestion:
-🖼️ [Screenshot of directory permissions before and after chown]
 
 
 ### ⚙️ 4.4 TheHive Application Configuration  
@@ -294,6 +294,10 @@ Then start, enable, and check TheHive:
     systemctl status thehive
 ✅ Expected Result: TheHive should now be active (running).  
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/thehive_status.png?raw=true" alt="Network Topology" height="250" />
+</p>
+
 Also re-check Cassandra & Elasticsearch status to ensure everything is running:  
 
     systemctl status cassandra.service
@@ -309,8 +313,9 @@ Login with default credentials:
     Username: admin@admin.local
     Password: secret
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of TheHive login page after first successful run]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_thehive/thehive_login.png?raw=true" height="250" />
+</p>
 
 
 ### 🧠 4.6 JVM Options Update  
@@ -336,8 +341,10 @@ In this step, Wazuh was configured and the Windows 10 workstation was added as a
 2.Log in using the indexer username and API password (retrieved later from the server).  
 3.You should see Total Agents = 0, indicating no agents are yet connected.  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of Wazuh Dashboard showing 0 agents connected]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh_agent_connected.png?raw=true" height="250" />
+</p>
 
 
 ### 📂 5.2 Retrieve Wazuh Installation Details  
@@ -357,9 +364,6 @@ Extract the files:
 From wazuh-password.txt, retrieve the API user password for Wazuh.  
 This password is used to log into the dashboard and manage agents.  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of terminal showing extraction + cat command output]
-
 
 ### ➕ 5.3 Add a New Agent in Wazuh  
 1.Go to Wazuh Dashboard → Add Agent  
@@ -374,8 +378,6 @@ This password is used to log into the dashboard and manage agents.
         Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.x.x.msi /q WAZUH_MANAGER="10.53.159.19" WAZUH_REGISTRATION_SERVER="10.53.159.19" WAZUH_AGENT_NAME="Win10-Workstation"
 
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of Deploy New Agent page in Wazuh Dashboard with fields filled]
 
 
 ### 💻 5.4 Install Wazuh Agent on Windows Workstation  
@@ -390,9 +392,9 @@ On the Windows 10 VM:
 -> Locate Wazuh Agent  
 -> Ensure status = Running  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of PowerShell installation output + Services window showing Wazuh Agent running]
-
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Services.png?raw=true" height="250" />
+</p>
 
 ### 📊 5.5 Verify Connection on Wazuh Dashboard  
 Go back to the Wazuh dashboard and refresh the page.  
@@ -401,8 +403,10 @@ You should now see:
 -> Active Agents = 1  
 -> Your Windows 10 VM listed as an active agent.  
 
-🖼️ Image Suggestion:
-🖼️ [Screenshot of Wazuh Dashboard showing agent status as Active + incoming logs]
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/wazuh_agent_connected.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/ubuntu_wazuh/mimikatz_search_in_wazuh_archives.png?raw=true" height="250" />
+</p>
 
 ✅ Result: Windows 10 telemetry is now being forwarded to Wazuh, and you can view logs/events in real-time from the workstation.  
 
@@ -422,6 +426,9 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
     <server>
       <address>10.53.159.19</address>
     </server>
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/ossec_conf1.png?raw=true" height="250" />
+</p>
 
 ### 2️⃣ Configuring Log Collection 📝  
 -> Locate <localfile> tags and remove defaults:  
@@ -440,15 +447,27 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
       <log_format>eventchannel</log_format>
     </localfile>
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/ossec_conf2.png?raw=true" height="250" />
+</p>
+
 ### 3️⃣ Creating Backup 💾  
 -> Before editing, create a backup:  
 
     copy "C:\Program Files (x86)\ossec-agent\ossec.conf" "C:\Program Files (x86)\ossec-agent\ossec-backup.conf"
 -> 🛡️ This allows you to restore the original config if needed.  
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/ossec.png?raw=true" height="250" />
+</p>
+
 ### 4️⃣ Restarting Wazuh Agent 🔄  
 -> Open Services → find Wazuh Agent → click Restart.  
 ✅ This applies the new configuration.  
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Services.png?raw=true" height="250" />
+</p>
 
 
 ### 5️⃣ Preparing Windows 10 for Testing 🖱️  
@@ -458,12 +477,22 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
 -> ⬇️ Download Mimikatz from GentilKiwi/Mimikatz GitHub  
 -> 📂 Extract the ZIP file.  
 
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/WindowsSecurity.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Mimikatz_download.png?raw=true" height="250" />
+</p>
+
 ### 6️⃣ Running Mimikatz ⚡  
 -> Open PowerShell as Administrator and run:  
 
     cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
     .\mimikatz.exe
 -> ✅ You should now see the Mimikatz console.  
+
+<p align="center">
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/WindowsSecurity.png?raw=true" height="250" />
+<img src="https://github.com/Pranav-Kale/SOAR-Automation-Home-Lab/blob/main/Screenshots/windows10/Mimikatz_download.png?raw=true" height="250" />
+</p>
 
 ### 7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
 Run these commands on Ubuntu server:  
