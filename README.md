@@ -207,9 +207,8 @@ For this project, the following tools were installed:
 
 📺 Reference Guide:  
 
-    🔗 Click Here for Installation Guide / Video
-
-This guide/video includes:  
+    🔗 https://www.youtube.com/watch?v=YxpUx0czgx4&list=PLG6KGSNK4PuBWmX9NykU0wnWamjxdKhDJ&index=7&t=1258s
+This video includes:  
 -> Sysmon installation steps  
 -> Wazuh manager, dashboard installation  
 -> TheHive installation and service setup  
