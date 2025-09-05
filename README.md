@@ -318,59 +318,112 @@ Edit JVM options to adjust memory allocation:
 
 
 
+---  
+
+## 🖥️ Step 5: Wazuh Configuration  
+In this step, Wazuh was configured and the Windows 10 workstation was added as an agent so that its telemetry could be collected and analyzed.  
+
+🌐 5.1 Access Wazuh Dashboard  
+1.Open a browser and navigate to the Wazuh Dashboard using the Ubuntu server IP address:  
+
+    https://10.53.159.19
+2.Log in using the indexer username and API password (retrieved later from the server).  
+3.You should see Total Agents = 0, indicating no agents are yet connected.  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Wazuh Dashboard showing 0 agents connected]
 
 
+📂 5.2 Retrieve Wazuh Installation Details  
+On the Wazuh Ubuntu Server:  
+
+    sudo su
+    ls
+You should see:  
+
+    snap    wazuh-install-files.tar    wazuh-install.sh
+Extract the files:  
+
+    tar -xvf wazuh-install-files.tar
+    cd wazuh-install-files
+    ls
+    cat wazuh-password.txt
+From wazuh-password.txt, retrieve the API user password for Wazuh.  
+This password is used to log into the dashboard and manage agents.  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of terminal showing extraction + cat command output]
 
 
+➕ 5.3 Add a New Agent in Wazuh  
+1.Go to Wazuh Dashboard → Add Agent  
+2.Select Windows as the operating system  
+3.Enter:  
+
+    Server Address: 10.53.159.19
+    Agent Name: e.g., Win10-Workstation
+4.Copy the installation command provided on the page.  
+📌 Dummy Command Example:  
+
+        Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.x.x.msi /q WAZUH_MANAGER="10.53.159.19" WAZUH_REGISTRATION_SERVER="10.53.159.19" WAZUH_AGENT_NAME="Win10-Workstation"
 
 
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Deploy New Agent page in Wazuh Dashboard with fields filled]
 
 
+💻 5.4 Install Wazuh Agent on Windows Workstation  
+On the Windows 10 VM:  
+1.Open PowerShell as Administrator  
+2.Paste the installation command you copied earlier (or dummy one above).  
+3.After installation, start the Wazuh agent service:  
+
+    net start wazuhsvc
+4.Verify the agent is running:  
+-> Open services.msc  
+-> Locate Wazuh Agent  
+-> Ensure status = Running  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of PowerShell installation output + Services window showing Wazuh Agent running]
 
 
+📊 5.5 Verify Connection on Wazuh Dashboard  
+Go back to the Wazuh dashboard and refresh the page.  
+You should now see:  
+-> Total Agents = 1  
+-> Active Agents = 1  
+-> Your Windows 10 VM listed as an active agent.  
 
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Wazuh Dashboard showing agent status as Active + incoming logs]
 
-
-
-
+✅ Result: Windows 10 telemetry is now being forwarded to Wazuh, and you can view logs/events in real-time from the workstation.  
 
 ---  
 
-## 🔄 Step 5: Creating an RDP Vulnerability 💻🔓  
-Since SMB was a dead end, I decided to create my own vulnerability by enabling Remote Desktop Protocol (RDP, Port 3389) and intentionally misconfiguring it.  
 
-🛠 Steps Taken:  
-  Enabled Remote Desktop from the system settings.  
-  Nmap scan still showed RDP as closed 🚫.  
-  🗝 Registry Tweak:  
-    Opened regedit → navigated to:  
 
-    HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server 
 
-  Changed fDenyTSConnections value to 0 ✅ (enabled RDP directly from registry, bypassing GUI).  
 
-🔄 Service Management:  
-  Located TermService (Remote Desktop Services).  
-  Stopped → Started → Restarted multiple times to ensure activation.  
-  ⚙ Group Policy Configuration (gpedit.msc):  
-      Enabled Allow users to connect remotely under:  
 
-    Computer Configuration → Administrative Templates → Windows Components → Remote Desktop Services → Remote Desktop Session Host → Connections  
 
-  Ensured Network Level Authentication was disabled to reduce restrictions.  
 
-📊 Final Check:  
-    Ran Nmap again → ✅ Port 3389 OPEN 🎉  
-    Ready for RDP exploitation in the next step!  
- 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/9c3f884c-812c-4c11-9659-1e4f9a9926ed" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/d57030d2-f85d-49b7-a4a0-fbea9f53cac1" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/697bc3cc-0083-41f9-9a5e-e5334e51d28d" alt="VMware Settings" width="250" height="199"/>
-</p>
 
----  
 
+
+
+
+
+
+
+
+
+
+
+
+
+               
 
 ## 🚀 Step 6: 🎯 Payload Delivery & Exploitation Attempt
   With RDP (3389) now open 🔓, I moved on to creating and delivering a malicious payload for exploitation.  
