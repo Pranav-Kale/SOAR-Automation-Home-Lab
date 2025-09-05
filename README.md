@@ -1,23 +1,25 @@
-# 👨‍💻SOC Home Lab: Using Splunk & Sysmon🚀  
+# 👨‍💻 SOAR Home Lab: Wazuh, Sysmon, Shuffle & TheHive 🚀
 
-## Table of Contents 
-1. [Introduction](#introduction)
-2. [Workflow Overview](#-workflow-overview)
-3. [Prerequisites](#-prerequisites)
-4. [Network Topology](#-network-topology)
-5. [Step 1: Environment Setup](#️-step-1-environment-setup)
-6. [Step 2: Network Configuration](#-step-2--network-configuration)
-7. [Step 3: Initial Network Scanning](#-step-3--initial-network-scanning-)
-8. [Step 4: Scanning & Attempted SMB Exploitation](#step-4-scanning-attempted-smb-exploitation)
-9. [Step 5: Creating an RDP Vulnerability](#-step-5-creating-an-rdp-vulnerability-)
-10. [Step 6: Payload Creation & Listener Setup](#-step-6--payload-delivery-&-exploitation-attempt)
-11. [Step 7: Payload Delivery & Reverse Shell](#️-step-7--payload-delivery-&-reverse-shell-gained)
-12. [Step 8: Splunk Analysis of Malware Execution](#-step-8-splunk-analysis-of-malware-execution-)
-13. [Step 9: Created a Dashboard for Better Understanding](#-step-9-created-a-dashboard-for-better-understanding-)
-13. [Step 10: Correlating Reverse Shell Activity with Splunk Logs](#-step-9-correlating-reverse-shell-activity-with-splunk-logs-)
-14. [Next Steps & Future Enhancements](#-next-steps--future-enhancements)
-15. [Conclusion](#-conclusion)
-16. [Let’s Connect](#-lets-connect)
+## Table of Contents  
+1. [Introduction](#introduction)  
+2. [Key Features](#key-features)  
+3. [Network Setup](#network-setup)  
+4. [Workflow Overview](#workflow-overview)  
+5. [Key Highlights](#key-highlights)  
+6. [Prerequisites](#prerequisites)  
+7. [Network Topology](#network-topology)  
+8. [Step 1: Environment Setup](#step-1-environment-setup)  
+9. [Step 2: Network Configuration](#step-2-network-configuration)  
+10. [Step 3: Installation (Linked Resources)](#step-3-installation-linked-resources)  
+11. [Step 4: TheHive Configuration](#step-4-thehive-configuration)  
+12. [Step 5: Wazuh Configuration](#step-5-wazuh-configuration)  
+13. [Step 6: Windows 10 Telemetry Configuration](#step-6-windows-10-telemetry-configuration)  
+14. [Step 7: Rule Creation in Wazuh](#step-7-rule-creation-in-wazuh)  
+15. [Step 8: Shuffle Integration & Workflow Automation](#step-8-shuffle-integration--workflow-automation)  
+16. [Outcome](#outcome)  
+17. [Next Steps & Future Enhancements](#next-steps--future-enhancements)  
+18. [Conclusion](#conclusion)  
+19. [Let’s Connect](#lets-connect)  
 
 
 ---  
@@ -151,7 +153,7 @@ SOC Automation Project stands out because of the following features:
 
 The lab uses two laptops connected through a bridged network, allowing all systems to communicate as if they are on the same LAN.  
 -> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.  
-=> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates   telemetry, enriches alerts, and creates cases.  
+-> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates   telemetry, enriches alerts, and creates cases.  
 
 🖼️ [Insert Simple Network Diagram – Laptop 1 & Laptop 2 with their VMs, connected via Bridged Network, arrows showing data flow]
 
@@ -720,7 +722,7 @@ After completing all steps, we successfully:
 
 ## 🚀 Next Step & Future Enhancements  
 🔜 Short Term Plans:  
--> 🛡️ Add more detection rules for other ATT&CK techniques (e.g., keylogging, lateral movement).  
+-> 🛡️ Add more detection rules for other ATT&CK techniques (e.g., keylogging, lateral movement). 
 -> 🌐 Integrate Threat Intelligence feeds into TheHive for enrichment and context.  
 -> 📊 Configure dashboards to visualize alerts over time and severity trends.  
 🌟 Long Term Enhancements:  
