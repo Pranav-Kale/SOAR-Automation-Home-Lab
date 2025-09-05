@@ -13,18 +13,17 @@
 10. [Step 3: Installation (Linked Resources)](#-step-3-installation)  
 11. [Step 4: TheHive Configuration](#-step-4-thehive-configuration)  
 12. [Step 5: Wazuh Configuration](#-step-5-wazuh-configuration)  
-13. [Step 6: Windows 10 Telemetry Configuration](#step-6-windows-10-telemetry-configuration)  
-14. [Step 7: Rule Creation in Wazuh](#step-7-rule-creation-in-wazuh)  
-15. [Step 8: Shuffle Integration & Workflow Automation](#step-8-shuffle-integration--workflow-automation)  
-16. [Outcome](#outcome)  
-17. [Next Steps & Future Enhancements](#next-steps--future-enhancements)  
-18. [Conclusion](#conclusion)  
-19. [Let’s Connect](#lets-connect)  
+13. [Step 6: Windows 10 Telemetry Configuration](#-step-6-windows-10-telemetry-configuration)  
+14. [Step 7: Rule Creation in Wazuh](#-step-7-rule-creation-in-wazuh)  
+15. [Step 8: Shuffle Integration & Workflow Automation](#-step-8-shuffle-integration-and-workflow-automation)  
+16. [Outcome](#-outcome)  
+17. [Next Steps & Future Enhancements](#-next-steps-and-future-enhancements)  
+18. [Conclusion](#-conclusion)  
+19. [Let’s Connect](#-lets-connect)  
 
 
 ---  
 ## 📌Introduction
-🔒 Introduction
 Welcome to the SOC Automation Project! 🚀
 
 In today’s world, cyber threats are everywhere – from phishing emails to credential dumping attacks using tools like Mimikatz. Security Operations Centers (SOCs) need to act fast to detect, analyze, and respond to incidents in real time.
@@ -407,7 +406,7 @@ You should now see:
 ## 🔍 Step 6: Windows 10 Telemetry Configuration  
 In this step, we configure Windows 10 telemetry to send Sysmon and event logs to the Wazuh Manager for analysis.  
 
-1️⃣ Editing ossec.conf File 📄  
+### 1️⃣ Editing ossec.conf File 📄  
 -> Navigate to:  
 
     C:\Program Files (x86)\ossec-agent
@@ -419,7 +418,7 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
       <address>10.53.159.19</address>
     </server>
 
-2️⃣ Configuring Log Collection 📝  
+### 2️⃣ Configuring Log Collection 📝  
 -> Locate <localfile> tags and remove defaults:  
 
     <localfile>
@@ -436,32 +435,32 @@ In this step, we configure Windows 10 telemetry to send Sysmon and event logs to
       <log_format>eventchannel</log_format>
     </localfile>
 
-3️⃣ Creating Backup 💾  
+### 3️⃣ Creating Backup 💾  
 -> Before editing, create a backup:  
 
     copy "C:\Program Files (x86)\ossec-agent\ossec.conf" "C:\Program Files (x86)\ossec-agent\ossec-backup.conf"
 -> 🛡️ This allows you to restore the original config if needed.  
 
-4️⃣ Restarting Wazuh Agent 🔄  
+### 4️⃣ Restarting Wazuh Agent 🔄  
 -> Open Services → find Wazuh Agent → click Restart.  
 ✅ This applies the new configuration.  
 
 
-5️⃣ Preparing Windows 10 for Testing 🖱️  
+### 5️⃣ Preparing Windows 10 for Testing 🖱️  
 -> Open Windows Security → Virus & Threat Protection.  
 🛑 Temporarily disable Real-Time Protection so Mimikatz is not blocked.  
 -> In Chrome → Settings → Privacy & Security, select No Protection (just for downloading).  
 -> ⬇️ Download Mimikatz from GentilKiwi/Mimikatz GitHub  
 -> 📂 Extract the ZIP file.  
 
-6️⃣ Running Mimikatz ⚡  
+### 6️⃣ Running Mimikatz ⚡  
 -> Open PowerShell as Administrator and run:  
 
     cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
     .\mimikatz.exe
 -> ✅ You should now see the Mimikatz console.  
 
-7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
+### 7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
 Run these commands on Ubuntu server:  
 
     # Create backup
@@ -478,7 +477,7 @@ Change inside <global>:
     systemctl restart wazuh-manager.service
 
 
-8️⃣ Configuring Filebeat for Archives 📊  
+### 8️⃣ Configuring Filebeat for Archives 📊  
 Edit Filebeat config:  
 
     nano /etc/filebeat/filebeat.yml
@@ -495,13 +494,13 @@ Restart Filebeat:
     systemctl restart filebeat
 
 
-9️⃣ Creating Index Pattern in Wazuh Dashboard 🖼️  
+### 9️⃣ Creating Index Pattern in Wazuh Dashboard 🖼️  
 -> Go to Stack Management → Index Patterns.  
 -> ➕ Create new pattern: wazuh-archives-*  
 -> Select @timestamp as time field.  
 -> ✅ Save and switch to this pattern.  
 
-🔟 Viewing Mimikatz Logs 👀  
+### 🔟 Viewing Mimikatz Logs 👀  
 Run Mimikatz again on Windows 10.  
 On Wazuh Manager:  
 
@@ -510,7 +509,7 @@ On Wazuh Manager:
 ✅ You should now see logs showing Mimikatz activity.  
 
 
-1️⃣1️⃣ Focus on Original File Name 🔎  
+### 1️⃣1️⃣ Focus on Original File Name 🔎  
 Inside the logs, look for:  
 
     "data.win.eventdata.originalFileName": "mimikatz.exe"
@@ -524,12 +523,12 @@ Inside the logs, look for:
 ## 📜 Step 7: Rule Creation in Wazuh  
 In this step, we create a custom rule in Wazuh to detect Mimikatz execution based on Sysmon logs.  
 
-1️⃣ Navigating to Rules Section 🧭  
+### 1️⃣ Navigating to Rules Section 🧭  
 -> Open Wazuh Dashboard.  
 -> Click the dropdown button (⏬) next to “Wazuh” → Sidebar Opens.  
 -> Navigate to: Management → Rules.  
 
-2️⃣ Finding the Target Rule 🔍  
+### 2️⃣ Finding the Target Rule 🔍  
 -> Click Manage Rules Files.  
 -> Search for Sysmon Rules → locate:  
 
@@ -539,11 +538,11 @@ In this step, we create a custom rule in Wazuh to detect Mimikatz execution base
    ✅ This means every time a new process/executable starts, Sysmon generates an Event ID 1 log.  
     This makes it ideal for catching tools like Mimikatz as soon as they run.  
 
-3️⃣ Creating Custom Rule File ✏️  
+### 3️⃣ Creating Custom Rule File ✏️  
 -> Open the rule file → Copy the <rule> block from sysmon_no_id_1.xml.  
 -> Go back → Click Custom Rules → Edit local_rules.xml file.  
 
-4️⃣Paste and Modifying the Rule 🛠️
+### 4️⃣Paste and Modifying the Rule 🛠️
 Inside local_rules.xml paste the copied rule below the existing rule:
 -> 🔢 Change Rule ID → must be greater than 100001.  
     Example:  
@@ -562,7 +561,7 @@ Inside local_rules.xml paste the copied rule below the existing rule:
 
     <mitre> <id>T1003</id> </mitre>
 
-5️⃣ Saving and Restarting Wazuh 🔄  
+### 5️⃣ Saving and Restarting Wazuh 🔄  
 -> Save changes.  
 -> Click Restart on the Wazuh Dashboard to apply the rule.  
 
@@ -577,14 +576,14 @@ Inside local_rules.xml paste the copied rule below the existing rule:
     “Mimikatz usage detected” 🔥
 
 📷 [🖼️ Screenshot Placeholder: Wazuh Dashboard showing Custom Rule Alert]
+
 ---  
 
 
-
-## 🔄 Step 8: Shuffle Integration & Workflow Automation   
+## 🔄 Step 8: Shuffle Integration and Workflow Automation   
 In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and configure automated workflows that send email alerts to SOC analysts when malicious activity (Mimikatz usage) is detected.  
 
-8.1 – Shuffle Setup 🖥️  
+### 8.1 – Shuffle Setup 🖥️  
 -> Open Shuffle on the Ubuntu VM where Hive is installed (instead of using host machine) — this ensures proper connectivity since cloud runtime was not able to connect with Hive.  
 -> Log in to Shuffle ➝ Navigate to Admin tab ➝ Select Locations.  
 -> Click Add Location ➝ Name: local-env ➝ Type: on-prem ➝ Save.  
@@ -596,7 +595,7 @@ In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and conf
     Select any use case ➝ Done.
 -> A new canvas opens with the ChangeMe icon.  
 
-8.2 – Webhook Setup 🔗  
+### 8.2 – Webhook Setup 🔗  
 -> Click on Triggers ➝ Drag and drop Webhook onto the canvas.  
 -> It auto-connects to ChangeMe.  
 -> Configure:  
@@ -605,7 +604,7 @@ In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and conf
     Copy the Webhook URI.
 -> Save ✅.  
 
-8.3 – Connect Wazuh to Shuffle 🛜  
+### 8.3 – Connect Wazuh to Shuffle 🛜  
 On Ubuntu server:  
 
     sudo nano /var/ossec/etc/ossec.conf
@@ -623,12 +622,12 @@ On Ubuntu server:
     sudo systemctl status wazuh-manager.service
 -> Confirm Wazuh manager is running.  
 
-8.4 – Triggering the Workflow 🚀  
+### 8.4 – Triggering the Workflow 🚀  
 -> On Windows 10 VM ➝ Run Mimikatz to generate alerts.  
 -> On Shuffle ➝ Click Webhook Start ➝ Click Run (person icon).  
 -> Confirm Wazuh logs are reaching Shuffle ➝ Expand execution arguments to inspect raw logs.  
 
-8.5 – Parse SHA-256 Hash (Regex) 🔍  
+### 8.5 – Parse SHA-256 Hash (Regex) 🔍  
 Reason for Parsing Hash:  
 We parse the hash to isolate only the SHA-256 value from the alert data. If we send unparsed data to VirusTotal, it may contain extra fields (like sha1= or md5=), causing incorrect or failed enrichment. Regex ensures we send a clean, valid hash to VirusTotal.  
 -> Change ChangeMe action ➝ Select Regex Capture Group.  
@@ -640,7 +639,7 @@ Regex:
 -> Save & rerun workflow ➝ Confirm parsed hashes in execution output ✅.  
 
 
-8.6 – VirusTotal Integration 🧪  
+### 8.6 – VirusTotal Integration 🧪  
 -> In Shuffle ➝ Apps ➝ Search & drag VirusTotal ➝ Connect sha256_regex ➝ Configure:  
 
     Action: Get a hash report
@@ -653,7 +652,7 @@ Regex:
 -> Inspect output ➝ Confirm field last_analysis_stats.malicious returns a value like 67.  
 
 
-8.7 – Configure TheHive 🐝  
+### 8.7 – Configure TheHive 🐝  
 In thehive I created a new organization and under the new Organization I created 2 users.  
 Why I created 2 users?  
 We created two users (one analyst, one service account) to follow principle of least privilege:  
@@ -695,7 +694,7 @@ In Shuffle:
     Type: internal
 -> Save & rerun ➝ Confirm Hive alert is generated ✅.  
 
-8.8 – Email Notification Setup 📧  
+### 8.8 – Email Notification Setup 📧  
 -> In Shuffle ➝ Apps ➝ Search for Email ➝ Drag & connect VirusTotal to the Email.  
 -> Configure:  
 
@@ -720,7 +719,7 @@ After completing all steps, we successfully:
 
 ---
 
-## 🚀 Next Step & Future Enhancements  
+## 🚀 Next Step and Future Enhancements  
 🔜 Short Term Plans:  
 -> 🛡️ Add more detection rules for other ATT&CK techniques (e.g., keylogging, lateral movement). 
 -> 🌐 Integrate Threat Intelligence feeds into TheHive for enrichment and context.  
