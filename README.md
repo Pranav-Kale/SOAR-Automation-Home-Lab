@@ -38,7 +38,7 @@ We’ve built a mini SOC homelab with:
 
 
 
-Key Features:  
+## Key Features:  
 🔍 Detect suspicious activity (Mimikatz execution)  
 📤 Forward alerts from Wazuh to Shuffle  
 🤖 Enrich alerts with VirusTotal threat intelligence  
@@ -48,25 +48,25 @@ Key Features:
 This end-to-end automation flow helps SOC teams respond faster, reduce manual effort, and focus on what matters most – stopping attacks.
 
 
+---
 
 
+## 🌐 Network Setup
 
-🌐 Network Setup
+SOC Automation lab uses three virtual machines, and because the RAM requirements were quite high, we distributed them across two laptops while keeping them in the same network.  
 
-SOC Automation lab uses three virtual machines, and because the RAM requirements were quite high, we distributed them across two laptops while keeping them in the same network.
+💻 Laptop 1  
+Ubuntu Server 1 (Wazuh Manager):  
+-> Collects logs from Windows 10 workstation  
+-> Detects suspicious activity  
+-> Sends alerts to Shuffle  
 
-💻 Laptop 1
-Ubuntu Server 1 (Wazuh Manager):
--> Collects logs from Windows 10 workstation
--> Detects suspicious activity
--> Sends alerts to Shuffle
+💻 Laptop 2  
+-> Windows 10 Workstation: Generates telemetry by running Mimikatz and sends logs via Wazuh Agent  
+-> Ubuntu Server 2 (TheHive): Receives enriched alerts and creates cases for SOC analysts  
+-> Shuffle (SOAR): Automates enrichment with VirusTotal, pushes alerts to TheHive, and sends email notifications  
 
-💻 Laptop 2
--> Windows 10 Workstation: Generates telemetry by running Mimikatz and sends logs via Wazuh Agent
--> Ubuntu Server 2 (TheHive): Receives enriched alerts and creates cases for SOC analysts
--> Shuffle (SOAR): Automates enrichment with VirusTotal, pushes alerts to TheHive, and sends email notifications
-
-All virtual machines were connected using a bridged network, ensuring seamless communication between laptops as if they were on the same physical network.
+All virtual machines were connected using a bridged network, ensuring seamless communication between laptops as if they were on the same physical network.  
 
 🖼️ [Insert Simple Network Topology Diagram – Laptop 1 + Laptop 2 + VMs + Bridge Network + Arrows Showing Communication]
 
@@ -74,25 +74,25 @@ All virtual machines were connected using a bridged network, ensuring seamless c
 ---  
 
 
-🔄 Workflow Overview
-The workflow of SOC Automation Project shows how an attack is detected, enriched, and escalated automatically.
+## 🔄 Workflow Overview
+The workflow of SOC Automation Project shows how an attack is detected, enriched, and escalated automatically.  
 
-1.Attack Simulation 🖥️
--> Mimikatz is executed on the Windows 10 Workstation to simulate credential dumping.
+1.Attack Simulation 🖥️  
+-> Mimikatz is executed on the Windows 10 Workstation to simulate credential dumping.  
 
-2.Detection 🔍
--> Wazuh Agent on Windows forwards logs to Wazuh Manager (Laptop 1).
--> Wazuh detects suspicious activity and generates an alert.
+2.Detection 🔍  
+-> Wazuh Agent on Windows forwards logs to Wazuh Manager (Laptop 1).  
+-> Wazuh detects suspicious activity and generates an alert.  
 
-3.Automation & Enrichment 🤖
--> The alert is sent to Shuffle (Laptop 2).
--> Shuffle enriches the alert by checking file hashes with VirusTotal.
+3.Automation & Enrichment 🤖  
+-> The alert is sent to Shuffle (Laptop 2).  
+-> Shuffle enriches the alert by checking file hashes with VirusTotal.  
 
-4.Case Creation 📂
--> The enriched alert is forwarded to TheHive (Laptop 2), where a case is created for SOC investigation.
+4.Case Creation 📂  
+-> The enriched alert is forwarded to TheHive (Laptop 2), where a case is created for SOC investigation.  
 
-5.Notification 📧
--> Shuffle sends an email notification to the SOC analyst with a summary of the incident.
+5.Notification 📧  
+-> Shuffle sends an email notification to the SOC analyst with a summary of the incident.  
 
 🖼️ [Insert Workflow Flowchart – From Attack Simulation to Email Notification]
 
@@ -104,15 +104,15 @@ The workflow of SOC Automation Project shows how an attack is detected, enriched
 
 
 
-🌟 Key Highlights
-SOC Automation Project stands out because of the following features:
+🌟 Key Highlights  
+SOC Automation Project stands out because of the following features:  
 
--> End-to-End SOC Workflow: Covers detection, enrichment, case creation, and analyst notification seamlessly.
--> Distributed Setup: Uses two laptops with VMs connected via bridged network to handle heavy RAM requirements efficiently.
--> Realistic Attack Simulation: Uses Mimikatz to simulate credential dumping(T1003), replicating real-world attack scenarios.
--> Automation with SOAR: Automatically enriches alerts using VirusTotal and creates cases in TheHive.
--> Immediate Notifications: Sends emails to SOC analysts for faster response.
--> Hands-On SOC Experience: Closely mimics a real SOC environment, making it perfect for learning and practice.
+-> End-to-End SOC Workflow: Covers detection, enrichment, case creation, and analyst notification seamlessly.  
+-> Distributed Setup: Uses two laptops with VMs connected via bridged network to handle heavy RAM requirements efficiently.  
+-> Realistic Attack Simulation: Uses Mimikatz to simulate credential dumping(T1003), replicating real-world attack scenarios.  
+-> Automation with SOAR: Automatically enriches alerts using VirusTotal and creates cases in TheHive.  
+-> Immediate Notifications: Sends emails to SOC analysts for faster response.  
+-> Hands-On SOC Experience: Closely mimics a real SOC environment, making it perfect for learning and practice.  
 
 🖼️ [Insert Screenshot of Your Entire Lab Setup – Virtual Machines Running on Both Laptops]
 
@@ -126,7 +126,7 @@ SOC Automation Project stands out because of the following features:
 
 
 
-## 🔧 Prerequisites 
+## 🔧 Prerequisites   
 
 | Requirement               | Description                                                                                    |
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -147,38 +147,38 @@ SOC Automation Project stands out because of the following features:
 
 
 
-🌐 Network Topology
+## 🌐 Network Topology  
 
-The lab uses two laptops connected through a bridged network, allowing all systems to communicate as if they are on the same LAN.
--> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.
-=> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates telemetry, enriches alerts, and creates cases.
+The lab uses two laptops connected through a bridged network, allowing all systems to communicate as if they are on the same LAN.  
+-> Laptop 1: Hosts Ubuntu Server 1 (Wazuh Manager) – collects logs and forwards alerts.  
+=> Laptop 2: Hosts Windows 10 Workstation, Ubuntu Server 2 (TheHive), and Shuffle – generates   telemetry, enriches alerts, and creates cases.  
 
 🖼️ [Insert Simple Network Diagram – Laptop 1 & Laptop 2 with their VMs, connected via Bridged Network, arrows showing data flow]
 
 
 ---  
 
-🛠️ Step 1: Environment Setup
-To start the project, I set up the virtual environment across two laptops:
+## 🛠️ Step 1: Environment Setup  
+To start the project, I set up the virtual environment across two laptops:  
 
--> Installed VMware Workstation (VirtualBox can also be used).
--> Created three VMs: Windows 10 Workstation, Ubuntu Server 1 (Wazuh Manager), and Ubuntu Server 2 (TheHive).
--> Allocated resources: Windows 10 → 5–6 GB RAM, Wazuh → 4 GB RAM, TheHive → 6–8 GB RAM.
--> Distributed load across two laptops (Laptop 1 hosted Wazuh Manager, Laptop 2 hosted Windows 10, TheHive, and Shuffle).
--> Installed operating systems and set Bridged Network mode so all machines could communicate.
+-> Installed VMware Workstation (VirtualBox can also be used).  
+-> Created three VMs: Windows 10 Workstation, Ubuntu Server 1 (Wazuh Manager), and Ubuntu Server 2 (TheHive).  
+-> Allocated resources: Windows 10 → 5–6 GB RAM, Wazuh → 4 GB RAM, TheHive → 6–8 GB RAM.  
+-> Distributed load across two laptops (Laptop 1 hosted Wazuh Manager, Laptop 2 hosted Windows 10, TheHive, and Shuffle).  
+-> Installed operating systems and set Bridged Network mode so all machines could communicate.  
 
 🖼️ [Screenshot of All VMs in VMware/VirtualBox With Resource Allocation and Network Mode Visible]
 
 ---  
 
-🌐 Step 2: Network Configuration
-After setting up the environment, I configured the network for all virtual machines to ensure proper communication:
+## 🌐 Step 2: Network Configuration  
+After setting up the environment, I configured the network for all virtual machines to ensure proper communication:  
 
--> Ubuntu Server 1 (Wazuh Manager): 10.53.159.19
--> Ubuntu Server 2 (TheHive + Shuffle): 10.53.159.152
--> Windows 10 Workstation: 10.53.159.106
+-> Ubuntu Server 1 (Wazuh Manager): 10.53.159.19  
+-> Ubuntu Server 2 (TheHive + Shuffle): 10.53.159.152  
+-> Windows 10 Workstation: 10.53.159.106  
 
-All machines were set to Bridged Network Mode so they could communicate with each other and with the host systems seamlessly.
+All machines were set to Bridged Network Mode so they could communicate with each other and with the host systems seamlessly.  
 
 🖼️ [Screenshot of VM Network Settings & IP Configurations (ip addr/ipconfig output) for Each VM]
 
@@ -186,20 +186,21 @@ All machines were set to Bridged Network Mode so they could communicate with eac
 ---  
 
 
-🛠️ Step 3: Installation
+## 🛠️ Step 3: Installation  
 
-For this project, the following tools were installed:
--> Sysmon on the Windows 10 VM (for detailed telemetry)
--> Wazuh SIEM on Ubuntu Server (for centralized log collection & monitoring)
--> TheHive on Ubuntu Server (for alert management & case handling)
+For this project, the following tools were installed:  
+-> Sysmon on the Windows 10 VM (for detailed telemetry)  
+-> Wazuh SIEM on Ubuntu Server (for centralized log collection & monitoring)  
+-> TheHive on Ubuntu Server (for alert management & case handling)  
 
-📺 Reference Guide:
-  🔗 Click Here for Installation Guide / Video
+📺 Reference Guide:  
 
-This guide/video includes:
--> Sysmon installation steps
--> Wazuh manager, dashboard installation
--> TheHive installation and service setup
+    🔗 Click Here for Installation Guide / Video
+
+This guide/video includes:  
+-> Sysmon installation steps  
+-> Wazuh manager, dashboard installation  
+-> TheHive installation and service setup  
 
 🖼️ Image Suggestion:
 
@@ -211,93 +212,93 @@ This guide/video includes:
 
 
 
-🧩 Step 4: TheHive Configuration
+## 🧩 Step 4: TheHive Configuration  
 
-In this step, TheHive was fully configured by modifying its dependencies (Cassandra, Elasticsearch) and its own configuration file.
-Below are the detailed commands and configuration changes used during the setup.
+In this step, TheHive was fully configured by modifying its dependencies (Cassandra, Elasticsearch) and its own configuration file.  
+Below are the detailed commands and configuration changes used during the setup.  
  
-🛠️ 4.1 Cassandra Configuration
+🛠️ 4.1 Cassandra Configuration  
 
     sudo su
     nano /etc/cassandra/cassandra.yml
-🔧 Changes made:
--> cluster_name: Changed to SOC Project
--> listen_address: Kept as localhost
--> rpc_address: Kept as localhost
--> seed_provider: Ensured value is localhost
+🔧 Changes made:  
+-> cluster_name: Changed to SOC Project  
+-> listen_address: Kept as localhost  
+-> rpc_address: Kept as localhost  
+-> seed_provider: Ensured value is localhost  
 
-Then restart Cassandra to apply changes:
+Then restart Cassandra to apply changes:  
 
     systemctl stop cassandra.service
     rm -rf /var/lib/cassandra/*
     systemctl start cassandra.service
     systemctl status cassandra.service
-✅ Expected Result: Cassandra service should be in active (running) state.
+✅ Expected Result: Cassandra service should be in active (running) state.  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of Cassandra config file (showing cluster_name) + terminal showing Cassandra service running]
 
 
-📡 4.2 Elasticsearch Configuration
-Edit the Elasticsearch configuration:
+📡 4.2 Elasticsearch Configuration  
+Edit the Elasticsearch configuration:  
 
     nano /etc/elasticsearch/elasticsearch.yml
-🔧 Changes made:
--> cluster.name: Changed to SOC Project
--> network.host: Uncommented and set to localhost
--> http.port: Uncommented and kept default (9200)
--> cluster.initial_master_nodes: Removed node2, kept only node1
+🔧 Changes made:  
+-> cluster.name: Changed to SOC Project  
+-> network.host: Uncommented and set to localhost  
+-> http.port: Uncommented and kept default (9200)  
+-> cluster.initial_master_nodes: Removed node2, kept only node1  
 
-Start and enable Elasticsearch:
+Start and enable Elasticsearch:  
 
     systemctl start elasticsearch
     systemctl enable elasticsearch
     systemctl status elasticsearch
-✅ Expected Result: Elasticsearch should be active (running).
+✅ Expected Result: Elasticsearch should be active (running).  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of elasticsearch.yml + terminal showing Elasticsearch running]
 
 
-📂 4.3 TheHive Directory Permissions
-Check directory ownership:
+📂 4.3 TheHive Directory Permissions  
+Check directory ownership:  
 
     ls -la /opt/thp
-If access is restricted to root, grant permissions to TheHive user:
-    chown -R thehive:thehive /opt/thp
+If access is restricted to root, grant permissions to TheHive user:  
+    chown -R thehive:thehive /opt/thp  
     
     ls -la /opt/thp
-✅ Expected Result: Ownership should now belong to thehive:thehive.
+✅ Expected Result: Ownership should now belong to thehive:thehive.  
 
 🖼️ Image Suggestion:
 🖼️ [Screenshot of directory permissions before and after chown]
 
 
-⚙️ 4.4 TheHive Application Configuration
-Open TheHive configuration file:
+⚙️ 4.4 TheHive Application Configuration  
+Open TheHive configuration file:  
 
     nano /etc/thehive/application.conf
-🔧 Changes made:
--> Ensured hostname is set to localhost
+🔧 Changes made:  
+-> Ensured hostname is set to localhost  
 
-Then start, enable, and check TheHive:
+Then start, enable, and check TheHive:  
 
     systemctl start thehive
     systemctl enable thehive
     systemctl status thehive
-✅ Expected Result: TheHive should now be active (running).
+✅ Expected Result: TheHive should now be active (running).  
 
-Also re-check Cassandra & Elasticsearch status to ensure everything is running:
+Also re-check Cassandra & Elasticsearch status to ensure everything is running:  
 
     systemctl status cassandra.service
     systemctl status elasticsearch.service
 
 
-🌐 4.5 Access TheHive UI
-Open a browser and navigate to:
+🌐 4.5 Access TheHive UI  
+Open a browser and navigate to:  
 
     http://localhost:9000
-Login with default credentials:
+Login with default credentials:  
 
     Username: admin@admin.local
     Password: secret
@@ -306,14 +307,14 @@ Login with default credentials:
 🖼️ [Screenshot of TheHive login page after first successful run]
 
 
-🧠 4.6 JVM Options Update
-Edit JVM options to adjust memory allocation:
+🧠 4.6 JVM Options Update  
+Edit JVM options to adjust memory allocation:  
 
     nano /etc/elasticsearch/jvm.options.d/jvm.options
     -Dlog4j2.formatMsgNoLookups=true
     -Xms2g
     -Xmx2g
-✅ At this stage, TheHive, Cassandra, and Elasticsearch should all be running and accessible, completing the configuration process.
+✅ At this stage, TheHive, Cassandra, and Elasticsearch should all be running and accessible, completing the configuration process.  
 
 
 
