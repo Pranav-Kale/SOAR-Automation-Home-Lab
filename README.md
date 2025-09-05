@@ -24,6 +24,7 @@
 ## 📌Introduction
 🔒 Introduction
 Welcome to the SOC Automation Project! 🚀
+
 In today’s world, cyber threats are everywhere – from phishing emails to credential dumping attacks using tools like Mimikatz. Security Operations Centers (SOCs) need to act fast to detect, analyze, and respond to incidents in real time.
 
 This project demonstrates how automation can make SOC operations faster and more efficient.
